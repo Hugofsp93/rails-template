@@ -24,6 +24,7 @@
     <%= vite_javascript_tag "inertia" %>
     <%= inertia_ssr_head %>
     <%= vite_javascript_tag 'application' %>
+    <%= vite_stylesheet_tag 'styles/application' %>
     <!--
       If using a TypeScript entrypoint file:
         vite_typescript_tag 'application'
@@ -38,6 +39,8 @@
 
   <body>
     <main class="container mx-auto mt-28 px-5 flex">
+      <p class="notice"><%= notice %></p>
+      <p class="alert"><%= alert %></p>
       <%= yield %>
     </main>
   </body>

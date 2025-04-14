@@ -1,32 +1,22 @@
 import { createInertiaApp } from '@inertiajs/react'
 import { createElement } from 'react'
 import { createRoot } from 'react-dom/client'
+import App from '../layouts/App.jsx'
+import Guest from '../layouts/Guest.jsx'
+import 'flowbite'
 
 createInertiaApp({
-  // Set default page title
-  // see https://inertia-rails.dev/guide/title-and-meta
-  //
-  // title: title => title ? `${title} - App` : 'App',
-
-  // Disable progress bar
-  //
-  // see https://inertia-rails.dev/guide/progress-indicators
-  // progress: false,
-
   resolve: (name) => {
     const pages = import.meta.glob('../pages/**/*.jsx', {
       eager: true,
     })
     const page = pages[`../pages/${name}.jsx`]
-    if (!page) {
-      console.error(`Missing Inertia page component: '${name}.jsx'`)
-    }
 
-    // To use a default layout, import the Layout component
-    // and use the following lines.
-    // see https://inertia-rails.dev/guide/pages#default-layouts
-    //
-    // page.default.layout ||= (page) => createElement(Layout, null, page)
+    page.default.layout = page.default.layout || (({ children, ...props }) => {
+      const { props: { currentUser } } = props
+      const Layout = currentUser ? App : Guest
+      return createElement(Layout, props, children)
+    })
 
     return page
   },
