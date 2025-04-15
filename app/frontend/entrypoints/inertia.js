@@ -10,13 +10,20 @@ createInertiaApp({
     const pages = import.meta.glob('../pages/**/*.jsx', {
       eager: true,
     })
+    
     const page = pages[`../pages/${name}.jsx`]
 
-    page.default.layout = page.default.layout || (({ children, ...props }) => {
+    if (!page) {
+      throw new Error(`Page not found: ${name}`)
+    }
+    
+    const Component = page.default
+
+    Component.layout = ({ children, ...props }) => {
       const { props: { currentUser } } = props
       const Layout = currentUser ? App : Guest
-      return createElement(Layout, props, children)
-    })
+      return createElement(Layout, props, createElement(Component, props))
+    }
 
     return page
   },
