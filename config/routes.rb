@@ -1,11 +1,17 @@
 Rails.application.routes.draw do
-  devise_for :users
+  devise_for :users, controllers: {
+    passwords: "users/passwords",
+    sessions: "users/sessions",
+    registrations: "users/registrations",
+    confirmations: "users/confirmations"
+  }
 
   devise_scope :user do
     get "/sign_in", to: "auth#sign_in"
     get "/sign_up", to: "auth#sign_up"
     get "/forgot_password", to: "auth#forgot_password"
     get "/reset_password", to: "auth#reset_password"
+    get "/resend_confirmation", to: "auth#resend_confirmation"
   end
 
   resources :pages

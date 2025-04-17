@@ -14,10 +14,27 @@ class AuthController < ApplicationController
   end
 
   def reset_password
-    render inertia: "auth/ResetPassword"
+    token = params[:reset_password_token]
+    email = params[:email]
+
+    if token.blank? || email.blank?
+      redirect_to "/sign_in", alert: "Invalid or expired password reset link."
+      return
+    end
+
+    user = User.find_by(email: email)
+    if user.blank? || !user.reset_password_period_valid?
+      redirect_to "/sign_in", alert: "Invalid or expired password reset link."
+      return
+    end
+
+    render inertia: "auth/ResetPassword", props: {
+      reset_password_token: token,
+      email: email
+    }
   end
 
-  def terms
-    render inertia: "auth/Terms"
+  def resend_confirmation
+    render inertia: "auth/ResendConfirmation"
   end
 end
