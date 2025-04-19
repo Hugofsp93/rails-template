@@ -6,7 +6,7 @@ import { useState } from 'react'
 export default function SignUp() {
   const { toast } = useToast()
   const [errors, setErrors] = useState({})
-  const { data, setData, post } = useForm({
+  const { data, setData, post, processing } = useForm({
     user: {
       email: '',
       password: '',
@@ -68,7 +68,7 @@ export default function SignUp() {
     <>
       <Head title="Sign Up" />
       {toast && <Toast {...toast} />}
-      <section className="w-full max-w-lg bg-gray-50 dark:bg-gray-900">
+      <section className="w-full mt-20 max-w-lg bg-gray-50 dark:bg-gray-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -144,7 +144,12 @@ export default function SignUp() {
                     <p className="text-sm text-red-600 dark:text-red-500">{errors.terms}</p>
                   )}
                 </div>
-                <button type="submit" className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">Create an account</button>
+                <button
+                  type="submit"
+                  disabled={processing}
+                  className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
+                  {processing ? 'Signing up...' : 'Create an account'}
+                  </button>
                 <p className="text-sm font-light text-gray-500 dark:text-gray-400">
                   Already have an account? <a href="/sign_in" className="font-medium text-primary-600 hover:underline dark:text-primary-500">Login here</a>
                 </p>

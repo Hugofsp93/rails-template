@@ -1,5 +1,6 @@
 class AuthController < ApplicationController
   skip_before_action :authenticate_user!
+  before_action :redirect_if_authenticated
 
   def sign_in
     render inertia: "auth/SignIn"
@@ -36,5 +37,13 @@ class AuthController < ApplicationController
 
   def resend_confirmation
     render inertia: "auth/ResendConfirmation"
+  end
+
+  private
+
+  def redirect_if_authenticated
+    if user_signed_in?
+      redirect_to root_path, notice: "You are already logged in."
+    end
   end
 end

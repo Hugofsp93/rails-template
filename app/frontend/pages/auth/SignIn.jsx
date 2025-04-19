@@ -56,7 +56,7 @@ export default function SignIn() {
     <>
       {toast && <Toast {...toast} />}
       <Head title="Sign In" />
-      <div className="w-full max-w-md min-h-[400px] bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-full mt-20 max-w-md min-h-[400px] bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
         <form className="space-y-6" onSubmit={handleSubmit} noValidate>
           <h5 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h5>
 

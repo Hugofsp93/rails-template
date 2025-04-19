@@ -65,3 +65,5 @@ gem "tailwindcss-rails", "~> 4.2"
 gem "inertia_rails", "~> 3.8"
 
 gem "devise"
+
+gem "premailer-rails"

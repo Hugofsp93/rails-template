@@ -11,6 +11,9 @@ class Users::RegistrationsController < Devise::RegistrationsController
           flash[:notice] = "A message with a confirmation link has been sent to your email address. Please follow the link to activate your account."
         end
         redirect_to "/sign_in" and return
+      else
+        flash[:error] = "E-mail has already been taken"
+        redirect_to "/sign_up" and return
       end
     end
   end
