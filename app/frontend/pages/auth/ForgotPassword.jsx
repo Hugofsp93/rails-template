@@ -49,7 +49,7 @@ export default function ForgotPassword() {
     <>
       <Head title="Forgot Password" />
       {toast && <Toast {...toast} />}
-      <section className="w-full mt-20 max-w-lg bg-gray-50 dark:bg-gray-900">
+      <section className="w-full mt-20 max-w-lg bg-transparent">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
           <div className="w-full p-6 bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-gray-800 dark:border-gray-700 sm:p-8">
             <h1 className="mb-1 text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl dark:text-white">
@@ -64,7 +64,7 @@ export default function ForgotPassword() {
                   name="email"
                   id="email"
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className={`bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white ${
+                  className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white dark:border-gray-600 ${
                     errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-blue-500 focus:border-blue-500'
                   }`}
                   placeholder="name@company.com"

@@ -1,0 +1,8 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+DO NOT CHANGE THIS LINE BELOW.
+THE FLOWBITE CONFIG BREAKS THE DARK MODE AND USES THE DEFAULT THEME FROM BROWSER OR OPERATING SYSTEM.
+*/
+/* @import "flowbite"; */
