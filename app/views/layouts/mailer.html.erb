@@ -2,12 +2,96 @@
 <html>
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
-    <style>
+    <style type="text/css" rel="stylesheet">
       /* Email styles need to be inline */
+      body {
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+        line-height: 1.5;
+        color: #1a1a1a;
+        background-color: #f3f4f6;
+        margin: 0;
+        padding: 0;
+      }
+      .container {
+        max-width: 600px;
+        margin: 0 auto;
+        padding: 25px;
+        color: #ffffff;
+        background-color: #162456;
+      }
+      .card {
+        background-color: #ffffff;
+        border-radius: 8px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        padding: 24px;
+        margin: 20px 0;
+      }
+      .button {
+        display: inline-block;
+        padding: 12px 24px;
+        background-color: #3b82f6;
+        color: #ffffff;
+        text-decoration: none;
+        border-radius: 6px;
+        font-weight: 500;
+        margin: 16px 0;
+      }
+      .text-center {
+        text-align: center;
+      }
+      .text-left {
+        text-align: left;
+      }
+      .footer {
+        text-align: center;
+        font-size: 14px;
+        color: #ffffff;
+        margin-top: 32px;
+      }
+      p {
+        color: #4b5563;
+        margin: 5px auto;
+      }
     </style>
   </head>
 
   <body>
-    <%= yield %>
+    <header style="box-shadow: none;">
+      <div class="container">
+        <div style="display: flex; align-items: center; justify-content: space-between;">
+          <%= link_to "http://localhost:3000", target: "_blank", rel: "noopener noreferrer" do %>
+            <%= image_tag asset_path("flowbite.svg", host: mailer_domain), style: "width: 35px; height: 35px;" %>
+          <% end %>
+          <small style="font-family: monospace; font-size: 18px;">Rails Template</small>
+        </div>
+      </div>
+    </header>
+    <div class="container" style="background-color: #fff;">
+      <%= yield %>
+    </div>
+    <footer id="footer">
+      <div class="container" style="height: 40px;">
+        <small>
+          © 2025 Rails Template. All rights reserved.
+        </small>
+        <div style="float: right;">
+          <small>
+            <%= link_to "https://steamcommunity.com/profiles/76561198880856463", style: "display: inline-block; padding-right: 10px;", target: "_blank", rel: "noopener noreferrer" do %>
+              <%= image_tag asset_path("steam.png", host: mailer_domain), style: "width: 30px; height: 30px;" %>
+            <% end %>
+            <%= link_to "https://www.x.com/hgfllp", style: "display: inline-block; padding-right: 10px;", target: "_blank", rel: "noopener noreferrer" do %>
+              <%= image_tag asset_path("twitter.png", host: mailer_domain), style: "width: 30px; height: 30px;" %>
+            <% end %>
+            <%= link_to "https://www.github.com/Hugofsp93", style: "display: inline-block; padding-right: 10px;", target: "_blank", rel: "noopener noreferrer" do %>
+              <%= image_tag asset_path("github.png", host: mailer_domain), style: "width: 30px; height: 30px;" %>
+            <% end %>
+            <%= link_to "https://www.youtube.com/@tabuadeesmeralda", style: "display: inline-block; padding-right: 10px;", target: "_blank", rel: "noopener noreferrer" do %>
+              <%= image_tag asset_path("youtube.png", host: mailer_domain), style: "width: 30px; height: 30px;" %>
+            <% end %>
+          </small>
+        </div>
+      </div>
+      </div>
+    </footer>
   </body>
 </html>

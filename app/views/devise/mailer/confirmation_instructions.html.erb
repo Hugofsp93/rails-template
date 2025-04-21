@@ -1,0 +1,9 @@
+<h1 style="font-size: 18px; font-weight: 600; color: #1a1a1a;">Welcome <%= @email %>!</h1>
+
+<p>You can confirm your account email through the link below:</p>
+
+<div class="text-left">
+  <%= link_to 'Confirm my account', user_confirmation_url(confirmation_token: @token), class: 'button' %>
+</div>
+
+<p>If you didn't request this confirmation, please ignore this email.</p>

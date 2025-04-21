@@ -1,0 +1,11 @@
+/*
+DO NOT USE THIS FILE
+USE app/assets/tailwind/application.css FILE INSTEAD
+*/
+/* @import "tailwindcss";
+@import "flowbite";
+@custom-variant dark (&:where(.dark, .dark *)); */
+/*
+IDK WHY, BUT THE CONFIG OF DARK MODE, 
+TAILWIND AND FLOWBITE MUST BE IN app/assets/tailwind/application.css
+*/

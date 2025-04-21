@@ -4,6 +4,9 @@
 # belong in git's global ignore instead:
 # `$XDG_CONFIG_HOME/git/ignore` or `~/.config/git/ignore`
 
+# Ignore cursor rules
+.cursor/rules
+
 # Ignore bundler config.
 /.bundle
 
@@ -43,3 +46,6 @@ node_modules
 
 /app/assets/builds/*
 !/app/assets/builds/.keep
+
+.env
+.env.*
