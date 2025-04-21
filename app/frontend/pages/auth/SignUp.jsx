@@ -68,7 +68,7 @@ export default function SignUp() {
     <>
       <Head title="Sign Up" />
       {toast && <Toast {...toast} />}
-      <section className="w-full mt-20 max-w-lg bg-gray-50 dark:bg-gray-900">
+      <section className="w-full mt-20 max-w-lg bg-transparent">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
           <div className="w-full bg-white rounded-lg shadow dark:border md:mt-0 sm:max-w-md xl:p-0 dark:bg-gray-800 dark:border-gray-700">
             <div className="p-6 space-y-4 md:space-y-6 sm:p-8">
@@ -84,7 +84,7 @@ export default function SignUp() {
                     type="email"
                     placeholder="name@email.com"
                     onChange={(e) => handleChange('email', e.target.value)}
-                    className={`bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white ${
+                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white dark:border-gray-600 ${
                       errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-blue-500 focus:border-blue-500'
                     }`}
                     required
@@ -101,7 +101,7 @@ export default function SignUp() {
                     id="password"
                     placeholder="••••••••"
                     onChange={(e) => handleChange('password', e.target.value)}
-                    className={`bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white ${
+                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white dark:border-gray-600 ${
                       errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-blue-500 focus:border-blue-500'
                     }`}
                   />
@@ -117,7 +117,7 @@ export default function SignUp() {
                     id="confirm-password"
                     placeholder="••••••••"
                     onChange={(e) => handleChange('password_confirmation', e.target.value)}
-                    className={`bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white ${
+                    className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white dark:border-gray-600 ${
                       errors.password_confirmation ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-blue-500 focus:border-blue-500'
                     }`}
                   />

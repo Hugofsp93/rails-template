@@ -67,7 +67,7 @@ export default function SignIn() {
               name="email"
               id="email"
               value={data.user.email}
-              className={`bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white ${
+              className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white dark:border-gray-600 ${
                 errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-blue-500 focus:border-blue-500'
               }`}
               placeholder="name@company.com"
@@ -85,7 +85,7 @@ export default function SignIn() {
               name="password"
               id="password"
               value={data.user.password}
-              className={`bg-gray-50 border text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white ${
+              className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white dark:border-gray-600 ${
                 errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-blue-500 focus:border-blue-500'
               }`}
               placeholder="••••••••"
