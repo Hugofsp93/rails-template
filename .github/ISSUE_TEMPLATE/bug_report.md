@@ -1,38 +1,38 @@
 ---
 name: 🐛 Bug Report
-about: Crie um report para nos ajudar a melhorar
+about: Create a report to help us improve
 title: 'bug: '
 labels: ['bug']
 assignees: ''
 ---
 
-## Descrição do Bug
-<!-- Uma descrição clara e concisa do bug -->
+## Bug Description
+<!-- A clear and concise description of what the bug is -->
 
-## Como Reproduzir
-Passos para reproduzir o comportamento:
-1. Vá para '...'
-2. Clique em '....'
-3. Role até '....'
-4. Veja o erro
+## To Reproduce
+Steps to reproduce the behavior:
+1. Go to '...'
+2. Click on '....'
+3. Scroll down to '....'
+4. See error
 
-## Comportamento Esperado
-<!-- Uma descrição clara e concisa do que você esperava que acontecesse -->
+## Expected Behavior
+<!-- A clear and concise description of what you expected to happen -->
 
 ## Screenshots
-<!-- Se aplicável, adicione screenshots para ajudar a explicar seu problema -->
+<!-- If applicable, add screenshots to help explain your problem -->
 
-## Ambiente
-<!-- Por favor, complete as seguintes informações -->
- - Sistema Operacional: [ex: iOS, Windows]
- - Navegador: [ex: chrome, safari]
- - Versão: [ex: 22]
- - Device: [ex: iPhone6, Desktop]
+## Environment
+<!-- Please complete the following information -->
+ - OS: [e.g. iOS, Windows]
+ - Browser: [e.g. chrome, safari]
+ - Version: [e.g. 22]
+ - Device: [e.g. iPhone6, Desktop]
 
-## Contexto Adicional
-<!-- Adicione qualquer outro contexto sobre o problema aqui -->
+## Additional Context
+<!-- Add any other context about the problem here -->
 
-## Logs de Erro
-<!-- Se houver logs de erro, cole-os aqui -->
+## Error Logs
+<!-- If there are error logs, paste them here -->
 ```
-cole os logs aqui
+paste logs here

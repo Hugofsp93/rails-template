@@ -1,39 +1,39 @@
 ---
-name: 📚 Documentação
-about: Melhorias ou adições à documentação
+name: 📚 Documentation
+about: Improvements or additions to documentation
 title: 'docs: '
 labels: ['documentation']
 assignees: ''
 ---
 
-## Descrição
-<!-- Descreva qual documentação precisa ser adicionada/atualizada -->
+## Description
+<!-- Describe what documentation needs to be added/updated -->
 
-## Tipo de Documentação
-<!-- Marque com um X o tipo de documentação -->
+## Documentation Type
+<!-- Mark with an X the type of documentation -->
 - [ ] README
-- [ ] Documentação de API
-- [ ] Documentação de código
-- [ ] Guias de usuário
-- [ ] Documentação de deploy
-- [ ] Outro (especifique)
+- [ ] API Documentation
+- [ ] Code Documentation
+- [ ] User Guides
+- [ ] Deployment Documentation
+- [ ] Other (specify)
 
-## Seções Afetadas
-<!-- Liste as seções da documentação que serão afetadas -->
+## Affected Sections
+<!-- List the sections of documentation that will be affected -->
 1. 
 2. 
 3. 
 
-## Proposta de Mudanças
-<!-- Descreva as mudanças que você propõe -->
+## Proposed Changes
+<!-- Describe the changes you propose -->
 
 ## Checklist
-- [ ] Verificar links quebrados
-- [ ] Verificar exemplos de código
-- [ ] Verificar ortografia e gramática
-- [ ] Atualizar índice/sumário
-- [ ] Atualizar versões mencionadas
-- [ ] Adicionar/atualizar screenshots
+- [ ] Check broken links
+- [ ] Verify code examples
+- [ ] Check spelling and grammar
+- [ ] Update index/table of contents
+- [ ] Update mentioned versions
+- [ ] Add/update screenshots
 
-## Contexto Adicional
-<!-- Adicione qualquer contexto adicional ou screenshots aqui --> 
+## Additional Context
+<!-- Add any other context or screenshots here --> 

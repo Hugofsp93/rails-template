@@ -1,35 +1,35 @@
 ---
 name: 🚀 Feature Request
-about: Sugira uma ideia para este projeto
+about: Suggest an idea for this project
 title: 'feat: '
 labels: ['enhancement']
 assignees: ''
 ---
 
-## Problema Relacionado
-<!-- Uma descrição clara e concisa do problema. Ex: Fico frustrado quando [...] -->
+## Related Problem
+<!-- A clear and concise description of what the problem is. Ex: I'm always frustrated when [...] -->
 
-## Solução Desejada
-<!-- Uma descrição clara e concisa do que você quer que aconteça -->
+## Desired Solution
+<!-- A clear and concise description of what you want to happen -->
 
-## Alternativas Consideradas
-<!-- Uma descrição clara e concisa de quaisquer soluções alternativas ou features que você considerou -->
+## Considered Alternatives
+<!-- A clear and concise description of any alternative solutions or features you've considered -->
 
 ## Mockups / Screenshots
-<!-- Se aplicável, adicione mockups para ajudar a explicar sua feature -->
+<!-- If applicable, add mockups to help explain your feature -->
 
-## Critérios de Aceitação
-<!-- Liste os critérios que precisam ser atendidos para esta feature ser considerada completa -->
-- [ ] Critério 1
-- [ ] Critério 2
-- [ ] Critério 3
+## Acceptance Criteria
+<!-- List the criteria that need to be met for this feature to be considered complete -->
+- [ ] Criteria 1
+- [ ] Criteria 2
+- [ ] Criteria 3
 
-## Impacto Técnico
-<!-- Descreva possíveis impactos técnicos desta feature -->
-- Banco de dados:
+## Technical Impact
+<!-- Describe possible technical impacts of this feature -->
+- Database:
 - Performance:
-- Segurança:
-- Outros:
+- Security:
+- Others:
 
-## Contexto Adicional
-<!-- Adicione qualquer outro contexto ou screenshots sobre o feature request aqui --> 
+## Additional Context
+<!-- Add any other context or screenshots about the feature request here --> 

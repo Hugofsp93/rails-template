@@ -1,5 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 📖 Documentação do Projeto
+  - name: 📖 Project Documentation
     url: https://github.com/Hugofsp93/rails-template#readme
-    about: Confira nossa documentação antes de criar uma issue
+    about: Check our documentation before creating an issue
