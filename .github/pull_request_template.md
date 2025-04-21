@@ -1,93 +1,93 @@
-# Description
-<!-- Describe the changes at a high level -->
+# Descrição
+<!-- Descreva as mudanças em alto nível -->
 
-## Type of Change
-<!-- Mark with an X the options that apply -->
-- [ ] New feature
-- [ ] Bug fix
-- [ ] Performance improvement
-- [ ] Code refactor
-- [ ] Documentation update
-- [ ] Other (specify)
+## Tipo de Mudança
+<!-- Marque com um X as opções que se aplicam -->
+- [ ] Nova feature
+- [ ] Correção de bug
+- [ ] Melhoria de performance
+- [ ] Refatoração de código
+- [ ] Atualização de documentação
+- [ ] Outro (especifique)
 
 ## Checklist
-<!-- Mark with an X the tasks that were completed -->
-### Development
-- [ ] Branch created from develop (feature/ISSUE-123-feature-name)
-- [ ] Commits follow conventional commits pattern
-- [ ] Code follows project style conventions
-- [ ] Self-review of code completed
+<!-- Marque com um X as tarefas que foram completadas -->
+### Desenvolvimento
+- [ ] Branch criada a partir da develop (feature/ISSUE-123-nome-da-feature)
+- [ ] Commits seguem o padrão conventional commits
+- [ ] Código segue as convenções de estilo do projeto
+- [ ] Realizei uma auto-revisão do meu código
 
-### Tests
-- [ ] Unit tests implemented
-- [ ] Integration tests implemented
-- [ ] System tests implemented (if applicable)
-- [ ] Test coverage maintained or improved
+### Testes
+- [ ] Testes unitários implementados
+- [ ] Testes de integração implementados
+- [ ] Testes de sistema implementados (se aplicável)
+- [ ] Cobertura de testes mantida ou melhorada
 
-### Documentation
-- [ ] Code documentation updated
-- [ ] API documentation updated (if applicable)
-- [ ] CHANGELOG.md updated
-- [ ] README.md updated (if needed)
+### Documentação
+- [ ] Documentação do código atualizada
+- [ ] Documentação da API atualizada (se aplicável)
+- [ ] CHANGELOG.md atualizado
+- [ ] README.md atualizado (se necessário)
 
-### Quality
-- [ ] Static code analysis (Rubocop) passing
-- [ ] Security tests performed
-- [ ] Performance tested and documented
-- [ ] Backward compatibility maintained
+### Qualidade
+- [ ] Análise estática de código (Rubocop) passando
+- [ ] Testes de segurança realizados
+- [ ] Performance testada e documentada
+- [ ] Compatibilidade com versões anteriores mantida
 
 ## Screenshots
-<!-- Add screenshots if applicable -->
-<!-- Example:
-![Login Screen](https://example.com/login.png)
-![Dashboard](https://example.com/dashboard.png)
+<!-- Adicione screenshots se aplicável -->
+<!-- Exemplo:
+![Tela de Login](https://exemplo.com/login.png)
+![Dashboard](https://exemplo.com/dashboard.png)
 -->
 
-## Additional Context
-<!-- Add any additional context about the PR here -->
-<!-- Example:
-This PR implements Two-Factor Authentication (2FA) functionality requested in issue #123.
-The implementation follows OWASP security guidelines and uses the 'devise-two-factor' gem.
+## Contexto Adicional
+<!-- Adicione qualquer contexto adicional sobre o PR aqui -->
+<!-- Exemplo:
+Este PR implementa a funcionalidade de autenticação de dois fatores (2FA) solicitada na issue #123.
+A implementação segue as diretrizes de segurança OWASP e utiliza a gem 'devise-two-factor'.
 -->
 
-## How to Test
-<!-- Describe how to test the changes -->
-<!-- Example:
-1. Checkout branch feature/2fa-authentication
-2. Run `bundle install`
-3. Run `rails db:migrate`
-4. Run `rails test:all`
-5. Visit http://localhost:3000/users/sign_in
-6. Try to login with an existing user
-7. Verify that 2FA code is sent via email
-8. Enter received code
-9. Verify successful login
+## Como Testar
+<!-- Descreva como testar as mudanças -->
+<!-- Exemplo:
+1. Faça checkout da branch feature/2fa-authentication
+2. Execute `bundle install`
+3. Execute `rails db:migrate`
+4. Execute `rails test:all`
+5. Acesse http://localhost:3000/users/sign_in
+6. Tente fazer login com um usuário existente
+7. Verifique se o código 2FA é enviado por email
+8. Insira o código recebido
+9. Verifique se o login é bem sucedido
 -->
 
-## Related Issues
-<!-- List of related issues (if any) -->
-<!-- Example:
-- Resolves #123 (2FA Implementation)
-- Related to #456 (Security Improvements)
-- Depends on #789 (Devise Update)
+## Issues Relacionadas
+<!-- Lista de issues relacionadas (se houver) -->
+<!-- Exemplo:
+- Resolve #123 (Implementação do 2FA)
+- Relacionado a #456 (Melhorias de segurança)
+- Depende de #789 (Atualização do Devise)
 -->
 
-## Deployment Notes
-<!-- Special instructions for deployment (if needed) -->
-<!-- Example:
-### Prerequisites
+## Notas de Deploy
+<!-- Instruções especiais para deploy (se necessário) -->
+<!-- Exemplo:
+### Pré-requisitos
 - Ruby 3.2.2
 - Rails 7.0.4
 - Redis 6.0
 
-### Deployment Steps
-1. Run migration: `rails db:migrate`
-2. Restart workers: `rails restart:workers`
-3. Clear cache: `rails cache:clear`
-4. Check logs: `tail -f log/production.log`
+### Passos de Deploy
+1. Executar migração: `rails db:migrate`
+2. Reiniciar workers: `rails restart:workers`
+3. Limpar cache: `rails cache:clear`
+4. Verificar logs: `tail -f log/production.log`
 
 ### Rollback
-1. Revert migration: `rails db:rollback`
-2. Revert to previous version: `git checkout v1.2.3`
-3. Restart application: `rails restart`
+1. Reverter migração: `rails db:rollback`
+2. Reverter para versão anterior: `git checkout v1.2.3`
+3. Reiniciar aplicação: `rails restart`
 --> 
