@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: 📖 Documentação do Projeto
+    url: https://github.com/Hugofsp93/rails-template#readme
+    about: Confira nossa documentação antes de criar uma issue
+  - name: 💬 Discussões
+    url: https://github.com/Hugofsp93/rails-template/discussions
+    about: Por favor, use as discussões para perguntas gerais e ideias 
