@@ -2,9 +2,10 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  /* To create variants of any color use tints.dev */
-  /* https://www.tints.dev/utility/ */
-  /* Alternative: https://uicolors.app/generate/ */
+  /* To create variants of any color use: */
+  /* rails "theme:generate[utility,#547734]" */
+  /* rails "theme:generate[neutral,#547734]" */
+  /* rails "theme:generate[anyNameYouWant,#547734]" to add a new color with all variants */
   /* the main color is the variant -500 */
 
   /* Color related to navbars, menus, pages, cards, etc. */
@@ -21,17 +22,17 @@
   --color-neutral-950: #09090b;  /* zinc-950 */
 
   /* Color related to buttons and links */
-  --color-utility-50: #fff6f6;   /* red-50 */
-  --color-utility-100: #fee2e2;  /* red-100 */
-  --color-utility-200: #fecaca;  /* red-200 */
-  --color-utility-300: #fca5a5;  /* red-300 */
-  --color-utility-400: #f87171;  /* red-400 */
-  --color-utility-500: #ef4444;  /* red-500 */
-  --color-utility-600: #dc2626;  /* red-600 */
-  --color-utility-700: #b91c1c;  /* red-700 */
-  --color-utility-800: #991b1b;  /* red-800 */
-  --color-utility-900: #7f1d1d;  /* red-900 */
-  --color-utility-950: #450a0a;  /* red-950 */
+  --color-utility-50: #EDF4E6;   /* red-50 */
+  --color-utility-100: #DDEBD1;  /* red-100 */
+  --color-utility-200: #B9D59F;  /* red-200 */
+  --color-utility-300: #98C171;  /* red-300 */
+  --color-utility-400: #76A749;  /* red-400 */
+  --color-utility-500: #547734;  /* red-500 */
+  --color-utility-600: #44602A;  /* red-600 */
+  --color-utility-700: #32471F;  /* red-700 */
+  --color-utility-800: #212E14;  /* red-800 */
+  --color-utility-900: #12190B;  /* red-900 */
+  --color-utility-950: #080B05;  /* red-950 */
 }
 
 /*

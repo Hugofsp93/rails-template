@@ -3,8 +3,8 @@ import { useEffect } from 'react'
 import { initFlowbite } from 'flowbite'
 import Footer from './Footer'
 import ThemeToggle from './ThemeToggle'
-import RubyLogo from '../../assets/images/ruby.png'
-import FlowbiteLogo from '../../assets/images/flowbite.svg'
+import RubyLogo from '../components/icons/RubyLogo'
+import AvatarLogo from '../components/icons/AvatarLogo'
 
 export default function App({ children }) {
   const { props: { currentUser } } = usePage()
@@ -18,39 +18,39 @@ export default function App({ children }) {
     <>
       <Head title="App" />
       {/* more navbar examples: https://flowbite.com/docs/components/navbar/ */}
-      <nav className="bg-white dark:bg-neutral-950 sticky w-full z-20 top-0 start-0 border-b border-neutral-200 dark:border-neutral-700">
+      <nav className="bg-neutral-50 dark:bg-neutral-950 sticky w-full z-20 top-0 start-0 border-b border-neutral-200 dark:border-neutral-700">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
-            <img src={RubyLogo} className="h-8" alt="Rails Template" />
-            <span className="self-center text-2xl font-semibold whitespace-nowrap text-neutral-900 dark:text-white">Rails Template</span>
+            <RubyLogo className="h-10" />
+            <span className="self-center text-2xl font-semibold whitespace-nowrap text-neutral-900 dark:text-neutral-50 font-mono">Rails Template</span>
           </a>
           <div className="flex items-center md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <ThemeToggle />
-            <button type="button" className="flex text-sm bg-white dark:bg-neutral-950 rounded-full md:me-0 focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+            <button type="button" className="flex text-sm bg-neutral-50 dark:bg-neutral-950 rounded-full md:me-0 focus:ring-2 focus:ring-neutral-300 dark:focus:ring-neutral-600" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
               <span className="sr-only">Open user menu</span>
-              <img className="w-8 h-8 rounded-full" src={FlowbiteLogo} alt="user photo" />
+              <AvatarLogo className="h-10" />
             </button>
-            <div className="z-50 hidden my-4 text-base list-none bg-white divide-y divide-neutral-100 rounded-lg shadow-sm dark:bg-neutral-700 dark:divide-neutral-600" id="user-dropdown">
+            <div className="z-50 hidden my-4 text-base list-none bg-neutral-50 divide-y divide-neutral-100 rounded-lg shadow-sm dark:bg-neutral-700 dark:divide-neutral-600" id="user-dropdown">
               <div className="px-4 py-3">
-                <span className="block text-sm text-neutral-900 dark:text-white">Bonnie Green</span>
+                <span className="block text-sm text-neutral-900 dark:text-neutral-50">Bonnie Green</span>
                 <span className="block text-sm  text-neutral-500 truncate dark:text-neutral-400">{currentUser.email}</span>
               </div>
               <ul className="py-2" aria-labelledby="user-menu-button">
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-white">Dashboard</a>
+                  <a href="#" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-neutral-50">Dashboard</a>
                 </li>
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-white">Settings</a>
+                  <a href="#" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-neutral-50">Settings</a>
                 </li>
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-white">Earnings</a>
+                  <a href="#" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-neutral-50">Earnings</a>
                 </li>
                 <li>
                   <Link
                     href="/users/sign_out"
                     method="delete"
                     as="button"
-                    className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-white"
+                    className="block w-full text-left px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-neutral-50"
                   >
                     Sign Out
                   </Link>
@@ -65,21 +65,21 @@ export default function App({ children }) {
             </button>
           </div>
           <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
-            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-neutral-100 rounded-lg bg-neutral-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-neutral-950 md:dark:bg-neutral-950 dark:border-neutral-800">
+            <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-neutral-100 rounded-lg bg-neutral-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-neutral-950 dark:border-neutral-800">
               <li>
-                <a href="/" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-white dark:hover:text-utility-400">Home</a>
+                <a href="/" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Home</a>
               </li>
               <li>
-                <a href="#" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-white dark:hover:text-utility-400">About</a>
+                <a href="#" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">About</a>
               </li>
               <li>
-                <a href="#" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-white dark:hover:text-utility-400">Services</a>
+                <a href="#" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Services</a>
               </li>
               <li>
-                <a href="#" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-white dark:hover:text-utility-400">Pricing</a>
+                <a href="#" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Pricing</a>
               </li>
               <li>
-                <a href="/contact" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-white dark:hover:text-utility-400">Contact</a>
+                <a href="/contact" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Contact</a>
               </li>
             </ul>
           </div>

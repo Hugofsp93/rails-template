@@ -56,18 +56,18 @@ export default function SignIn() {
     <>
       {toast && <Toast {...toast} />}
       <Head title="Sign In" />
-      <div className="w-full mt-20 max-w-md min-h-[400px] bg-white border border-neutral-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-neutral-950 dark:border-neutral-800">
+      <div className="w-full mt-20 max-w-md min-h-[400px] bg-neutral-50 border border-neutral-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-neutral-950 dark:border-neutral-800">
         <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-          <h5 className="text-xl font-medium text-neutral-900 dark:text-white">Sign in to our platform</h5>
+          <h5 className="text-xl font-medium text-neutral-900 dark:text-neutral-50">Sign in to our platform</h5>
 
           <div className="h-[85px]">
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-white">Your email</label>
+            <label htmlFor="email" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your email</label>
             <input
               type="email"
               name="email"
               id="email"
               value={data.user.email}
-              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-white dark:border-neutral-700 ${
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
                 errors.email ? 'border-utility-500 focus:ring-utility-500 focus:border-utility-500' : 'focus:ring-utility-500 focus:border-utility-500'
               }`}
               placeholder="name@company.com"
@@ -79,13 +79,13 @@ export default function SignIn() {
           </div>
 
           <div className="h-[85px]">
-            <label htmlFor="password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-white">Your password</label>
+            <label htmlFor="password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your password</label>
             <input
               type="password"
               name="password"
               id="password"
               value={data.user.password}
-              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-white dark:border-neutral-700 ${
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
                 errors.password ? 'border-utility-500 focus:ring-utility-500 focus:border-utility-500' : 'focus:ring-utility-500 focus:border-utility-500'
               }`}
               placeholder="••••••••"
@@ -103,7 +103,7 @@ export default function SignIn() {
                   id="remember"
                   type="checkbox"
                   checked={data.user.remember_me}
-                  className="w-4 h-4 border border-neutral-300 rounded-sm bg-neutral-50 accent-utility-500 focus:ring-1 focus:ring-white dark:bg-neutral-700 dark:border-neutral-700 dark:focus:ring-neutral-950 dark:ring-offset-neutral-800 dark:focus:ring-offset-neutral-800"
+                  className="w-4 h-4 border border-neutral-300 rounded-sm bg-neutral-50 accent-utility-500 focus:ring-1 focus:ring-neutral-50 dark:bg-neutral-700 dark:border-neutral-700 dark:focus:ring-neutral-950 dark:ring-offset-neutral-800 dark:focus:ring-offset-neutral-800"
                   onChange={(e) => handleChange('remember_me', e.target.checked)}
                 />
               </div>
@@ -115,7 +115,7 @@ export default function SignIn() {
           <button
             type="submit"
             disabled={processing}
-            className="w-full text-white bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-utility-500 dark:hover:bg-utility-600 dark:focus:ring-utility-500 disabled:opacity-75"
+            className="w-full text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-utility-500 dark:hover:bg-utility-600 dark:focus:ring-utility-500 disabled:opacity-75"
           >
             {processing ? 'Signing in...' : 'Login to your account'}
           </button>
