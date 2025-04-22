@@ -9,7 +9,7 @@ export default function ThemeToggle() {
         id="theme-toggle" 
         type="button" 
         onClick={toggleTheme}
-        className="text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none hover:scale-115 transition-all duration-400 rounded-lg text-sm p-2.5 mr-5"
+        className="text-zinc-500 dark:text-zinc-400 hover:bg-zinc-100 dark:hover:bg-zinc-700 focus:outline-none hover:scale-115 transition-all duration-400 rounded-lg text-sm p-2.5 mr-5"
       >
         <svg 
           id="theme-toggle-dark-icon" 

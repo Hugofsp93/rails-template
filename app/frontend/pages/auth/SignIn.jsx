@@ -56,19 +56,19 @@ export default function SignIn() {
     <>
       {toast && <Toast {...toast} />}
       <Head title="Sign In" />
-      <div className="w-full mt-20 max-w-md min-h-[400px] bg-white border border-gray-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-gray-800 dark:border-gray-700">
+      <div className="w-full mt-20 max-w-md min-h-[400px] bg-white border border-zinc-200 rounded-lg shadow-sm sm:p-6 md:p-8 dark:bg-zinc-950 dark:border-zinc-800">
         <form className="space-y-6" onSubmit={handleSubmit} noValidate>
-          <h5 className="text-xl font-medium text-gray-900 dark:text-white">Sign in to our platform</h5>
+          <h5 className="text-xl font-medium text-zinc-900 dark:text-white">Sign in to our platform</h5>
 
           <div className="h-[85px]">
-            <label htmlFor="email" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your email</label>
+            <label htmlFor="email" className="block mb-2 text-sm font-medium text-zinc-900 dark:text-white">Your email</label>
             <input
               type="email"
               name="email"
               id="email"
               value={data.user.email}
-              className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white dark:border-gray-600 ${
-                errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-blue-500 focus:border-blue-500'
+              className={`bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg block w-full p-2.5 dark:bg-zinc-700 dark:text-white dark:border-zinc-700 ${
+                errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-red-500 focus:border-red-500'
               }`}
               placeholder="name@company.com"
               onChange={(e) => handleChange('email', e.target.value)}
@@ -79,14 +79,14 @@ export default function SignIn() {
           </div>
 
           <div className="h-[85px]">
-            <label htmlFor="password" className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">Your password</label>
+            <label htmlFor="password" className="block mb-2 text-sm font-medium text-zinc-900 dark:text-white">Your password</label>
             <input
               type="password"
               name="password"
               id="password"
               value={data.user.password}
-              className={`bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full p-2.5 dark:bg-gray-600 dark:text-white dark:border-gray-600 ${
-                errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-blue-500 focus:border-blue-500'
+              className={`bg-zinc-50 border border-zinc-300 text-zinc-900 text-sm rounded-lg block w-full p-2.5 dark:bg-zinc-700 dark:text-white dark:border-zinc-700 ${
+                errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500' : 'focus:ring-red-500 focus:border-red-500'
               }`}
               placeholder="••••••••"
               onChange={(e) => handleChange('password', e.target.value)}
@@ -103,25 +103,25 @@ export default function SignIn() {
                   id="remember"
                   type="checkbox"
                   checked={data.user.remember_me}
-                  className="w-4 h-4 border border-gray-300 rounded-sm bg-gray-50 focus:ring-2 focus:ring-blue-300 dark:bg-gray-700 dark:border-gray-600 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800"
+                  className="w-4 h-4 border border-zinc-300 rounded-sm bg-zinc-50 accent-red-500 focus:ring-1 focus:ring-white dark:bg-zinc-700 dark:border-zinc-700 dark:focus:ring-zinc-950 dark:ring-offset-zinc-800 dark:focus:ring-offset-zinc-800"
                   onChange={(e) => handleChange('remember_me', e.target.checked)}
                 />
               </div>
-              <label htmlFor="remember" className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300">Remember me</label>
+              <label htmlFor="remember" className="ms-2 text-sm font-medium text-zinc-900 dark:text-zinc-300">Remember me</label>
             </div>
-            <a href="/forgot_password" className="ms-auto text-sm text-blue-700 hover:underline dark:text-blue-500">Forgot your password?</a>
+            <a href="/forgot_password" className="ms-auto text-sm text-red-700 hover:underline dark:text-white">Forgot your password?</a>
           </div>
 
           <button
             type="submit"
             disabled={processing}
-            className="w-full text-white bg-blue-700 hover:bg-blue-800 focus:ring-2 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800 disabled:opacity-75"
+            className="w-full text-white bg-red-700 hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-500 disabled:opacity-75"
           >
             {processing ? 'Signing in...' : 'Login to your account'}
           </button>
 
-          <div className="text-sm font-medium text-gray-500 dark:text-gray-300">
-            Not registered? <a href="/sign_up" className="text-blue-700 hover:underline dark:text-blue-500">Create account</a>
+          <div className="text-sm font-medium text-zinc-500 dark:text-zinc-300">
+            Not registered? <a href="/sign_up" className="text-red-700 hover:underline dark:text-red-400">Create account</a>
           </div>
         </form>
       </div>
