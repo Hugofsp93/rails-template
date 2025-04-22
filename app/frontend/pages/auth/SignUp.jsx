@@ -182,8 +182,8 @@ export default function SignUp() {
               </p>
             </div>
             <div className="flex items-center p-4 md:p-5 border-t border-zinc-200 rounded-b dark:border-zinc-700">
-              <button data-modal-hide="static-modal" type="button" onClick={() => document.getElementById('terms').checked = true} className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800 dark:focus:ring-2">I accept</button>
-              <button data-modal-hide="static-modal" type="button" onClick={() => document.getElementById('terms').checked = false} className="py-2.5 px-5 ms-3 text-sm font-medium text-zinc-900 focus:outline-none bg-white rounded-lg border border-zinc-200 hover:bg-zinc-100 hover:text-red-700 focus:z-10 focus:ring-4 focus:ring-zinc-100 dark:focus:ring-zinc-700 dark:bg-zinc-700 dark:text-white dark:border-zinc-700 dark:hover:text-zinc-300 dark:hover:bg-zinc-800">Decline</button>
+              <button data-modal-hide="static-modal" type="button" onClick={() => document.getElementById('terms').checked = true} className="text-white bg-red-700 hover:bg-red-800 focus:ring-2 focus:outline-none focus:ring-red-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-red-500 dark:hover:bg-red-600 dark:focus:ring-red-800 dark:focus:ring-2">I accept</button>
+              <button data-modal-hide="static-modal" type="button" onClick={() => document.getElementById('terms').checked = false} className="py-2.5 px-5 ms-3 text-sm font-medium text-zinc-900 focus:outline-none bg-white rounded-lg border border-zinc-200 hover:bg-zinc-100 hover:text-zinc-400 focus:z-10 focus:ring-2 focus:ring-zinc-100 dark:focus:ring-zinc-700 dark:bg-zinc-700 dark:text-white dark:border-zinc-700 dark:hover:text-zinc-300 dark:hover:bg-zinc-800">Decline</button>
             </div>
           </div>
         </div>
