@@ -90,3 +90,4 @@ A implementação segue as diretrizes de segurança OWASP e utiliza a gem 'devis
 1. Reverter migração: `rails db:rollback`
 2. Reverter para versão anterior: `git checkout v1.2.3`
 3. Reiniciar aplicação: `rails restart`
+--> 
