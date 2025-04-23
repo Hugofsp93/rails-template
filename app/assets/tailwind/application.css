@@ -22,17 +22,17 @@
   --color-neutral-950: #09090b;  /* zinc-950 */
 
   /* Color related to buttons and links */
-  --color-utility-50: #EDF4E6;   /* red-50 */
-  --color-utility-100: #DDEBD1;  /* red-100 */
-  --color-utility-200: #B9D59F;  /* red-200 */
-  --color-utility-300: #98C171;  /* red-300 */
-  --color-utility-400: #76A749;  /* red-400 */
-  --color-utility-500: #547734;  /* red-500 */
-  --color-utility-600: #44602A;  /* red-600 */
-  --color-utility-700: #32471F;  /* red-700 */
-  --color-utility-800: #212E14;  /* red-800 */
-  --color-utility-900: #12190B;  /* red-900 */
-  --color-utility-950: #080B05;  /* red-950 */
+  --color-utility-50: #F2FCE3;   /* red-50 */
+  --color-utility-100: #E7FACC;  /* red-100 */
+  --color-utility-200: #D0F49A;  /* red-200 */
+  --color-utility-300: #B8EF67;  /* red-300 */
+  --color-utility-400: #9FE930;  /* red-400 */
+  --color-utility-500: #84CC16;  /* red-500 */
+  --color-utility-600: #68A111;  /* red-600 */
+  --color-utility-700: #507C0D;  /* red-700 */
+  --color-utility-800: #355309;  /* red-800 */
+  --color-utility-900: #1B2904;  /* red-900 */
+  --color-utility-950: #0C1202;  /* red-950 */
 }
 
 /*
