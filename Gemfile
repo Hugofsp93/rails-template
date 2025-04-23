@@ -67,3 +67,5 @@ gem "inertia_rails", "~> 3.8"
 gem "devise"
 
 gem "premailer-rails"
+
+gem "httparty"
