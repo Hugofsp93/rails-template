@@ -34,7 +34,7 @@ export default function Contact() {
             <label for="message" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-400">Your message</label>
             <textarea id="message" rows="6" className="block p-2.5 w-full text-sm text-neutral-900 bg-neutral-50 rounded-lg shadow-sm border border-neutral-300 focus:ring-neutral-500 focus:border-neutral-500 dark:bg-neutral-700 dark:border-neutral-700 dark:placeholder-neutral-400 dark:text-neutral-50 dark:focus:ring-neutral-500 dark:focus:border-utility-500" placeholder="Leave a comment..."></textarea>
           </div>
-          <button type="submit" className="text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-utility-500 dark:hover:bg-utility-600 dark:focus:ring-utility-800">Send message</button>
+          <button type="submit" className="text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-utility-600 dark:hover:bg-utility-500 dark:focus:ring-utility-800">Send message</button>
         </form>
       </div>
     </section>

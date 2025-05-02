@@ -9,24 +9,137 @@ export default function Home() {
     <>
       {toast && <Toast {...toast} />}
       <Head title="Home" />
-      <div className="w-full p-4 text-center bg-neutral-50 border border-neutral-200 rounded-lg shadow-sm sm:p-8 dark:bg-neutral-950 dark:border-neutral-800">
-        <h5 className="mb-2 text-3xl font-bold text-neutral-900 dark:text-neutral-50">Work fast from anywhere</h5>
-        <p className="mb-5 text-base text-neutral-500 sm:text-lg dark:text-neutral-400">Stay up to date and move work forward with Flowbite on iOS & Android. Download the app today.</p>
-        <div className="items-center justify-center space-y-4 sm:flex sm:space-y-0 sm:space-x-4 rtl:space-x-reverse">
-          <a href="#" className="w-full sm:w-auto bg-neutral-800 hover:bg-neutral-700 focus:ring-4 focus:outline-none focus:ring-neutral-300 text-neutral-50 rounded-lg inline-flex items-center justify-center px-4 py-2.5 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:focus:ring-neutral-700">
-            <svg className="me-3 w-7 h-7" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="apple" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512"><path fill="currentColor" d="M318.7 268.7c-.2-36.7 16.4-64.4 50-84.8-18.8-26.9-47.2-41.7-84.7-44.6-35.5-2.8-74.3 20.7-88.5 20.7-15 0-49.4-19.7-76.4-19.7C63.3 141.2 4 184.8 4 273.5q0 39.3 14.4 81.2c12.8 36.7 59 126.7 107.2 125.2 25.2-.6 43-17.9 75.8-17.9 31.8 0 48.3 17.9 76.4 17.9 48.6-.7 90.4-82.5 102.6-119.3-65.2-30.7-61.7-90-61.7-91.9zm-56.6-164.2c27.3-32.4 24.8-61.9 24-72.5-24.1 1.4-52 16.4-67.9 34.9-17.5 19.8-27.8 44.3-25.6 71.9 26.1 2 49.9-11.4 69.5-34.3z"></path></svg>
-            <div className="text-left rtl:text-right">
-              <div className="mb-1 text-xs">Download on the</div>
-              <div className="-mt-1 font-sans text-sm font-semibold">Mac App Store</div>
+
+
+      <div className="w-full max-w-screen-xl mx-auto bg-neutral-50 border border-neutral-200 rounded-lg shadow-sm dark:bg-neutral-800 dark:border-neutral-700">
+        <div className="sm:hidden">
+          <label htmlFor="tabs" className="sr-only">Select tab</label>
+          <select id="tabs" className="bg-neutral-50 border-0 border-b border-neutral-200 text-neutral-900 text-sm rounded-t-lg focus:ring-utility-500 focus:border-utility-500 block w-full p-2.5 dark:bg-neutral-700 dark:border-neutral-600 dark:placeholder-neutral-400 dark:text-neutral-50 dark:focus:ring-utility-500 dark:focus:border-utility-500">
+            <option>Statistics</option>
+            <option>Services</option>
+            <option>FAQ</option>
+          </select>
+        </div>
+        <ul className="hidden text-sm font-medium text-center text-neutral-500 divide-x divide-neutral-200 rounded-lg sm:flex dark:divide-neutral-600 dark:text-neutral-400 rtl:divide-x-reverse" id="fullWidthTab" data-tabs-toggle="#fullWidthTabContent" data-active-classes="text-utility-600 dark:text-utility-500 border-utility-600 dark:border-utility-500" role="tablist">
+          <li className="w-full">
+            <button id="stats-tab" data-tabs-target="#stats" type="button" role="tab" aria-controls="stats" aria-selected="true" className="inline-block w-full p-4 rounded-ss-lg bg-neutral-50 hover:bg-neutral-100 focus:outline-none dark:bg-neutral-700 dark:hover:bg-neutral-600">Statistics</button>
+          </li>
+          <li className="w-full">
+            <button id="about-tab" data-tabs-target="#about" type="button" role="tab" aria-controls="about" aria-selected="false" className="inline-block w-full p-4 bg-neutral-50 hover:bg-neutral-100 focus:outline-none dark:bg-neutral-700 dark:hover:bg-neutral-600">Services</button>
+          </li>
+          <li className="w-full">
+            <button id="faq-tab" data-tabs-target="#faq" type="button" role="tab" aria-controls="faq" aria-selected="false" className="inline-block w-full p-4 rounded-se-lg bg-neutral-50 hover:bg-neutral-100 focus:outline-none dark:bg-neutral-700 dark:hover:bg-neutral-600">FAQ</button>
+          </li>
+        </ul>
+        <div id="fullWidthTabContent" className="border-t border-neutral-200 dark:border-neutral-600">
+          <div className="hidden p-4 bg-neutral-50 rounded-lg md:p-8 dark:bg-neutral-800" id="stats" role="tabpanel" aria-labelledby="stats-tab">
+            <dl className="grid max-w-screen-xl grid-cols-2 gap-8 p-4 mx-auto text-neutral-900 sm:grid-cols-3 xl:grid-cols-6 dark:text-neutral-50 sm:p-8">
+              <div className="flex flex-col items-center justify-center">
+                <dt className="mb-2 text-3xl font-extrabold text-neutral-600 dark:text-neutral-200">73M+</dt>
+                <dd className="text-neutral-500 dark:text-neutral-400">Developers</dd>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <dt className="mb-2 text-3xl font-extrabold text-neutral-600 dark:text-neutral-200">100M+</dt>
+                <dd className="text-neutral-500 dark:text-neutral-400">Public repositories</dd>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <dt className="mb-2 text-3xl font-extrabold text-neutral-600 dark:text-neutral-200">1000s</dt>
+                <dd className="text-neutral-500 dark:text-neutral-400">Open source projects</dd>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <dt className="mb-2 text-3xl font-extrabold text-neutral-600 dark:text-neutral-200">1B+</dt>
+                <dd className="text-neutral-500 dark:text-neutral-400">Contributors</dd>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <dt className="mb-2 text-3xl font-extrabold text-neutral-600 dark:text-neutral-200">90+</dt>
+                <dd className="text-neutral-500 dark:text-neutral-400">Top Forbes companies</dd>
+              </div>
+              <div className="flex flex-col items-center justify-center">
+                <dt className="mb-2 text-3xl font-extrabold text-neutral-600 dark:text-neutral-200">4M+</dt>
+                <dd className="text-neutral-500 dark:text-neutral-400">Organizations</dd>
+              </div>
+            </dl>
+          </div>
+          <div className="hidden p-4 bg-neutral-50 rounded-lg md:p-8 dark:bg-neutral-800" id="about" role="tabpanel" aria-labelledby="about-tab">
+            <h2 className="mb-5 text-2xl font-extrabold tracking-tight text-neutral-900 dark:text-neutral-50">We invest in the world's potential</h2>
+            <ul role="list" className="space-y-4 text-neutral-500 dark:text-neutral-400">
+              <li className="flex space-x-2 rtl:space-x-reverse items-center">
+                <svg className="shrink-0 w-3.5 h-3.5 text-utility-600 dark:text-utility-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                </svg>
+                <span className="leading-tight">Dynamic reports and dashboards</span>
+              </li>
+              <li className="flex space-x-2 rtl:space-x-reverse items-center">
+                <svg className="shrink-0 w-3.5 h-3.5 text-utility-600 dark:text-utility-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                </svg>
+                <span className="leading-tight">Templates for everyone</span>
+              </li>
+              <li className="flex space-x-2 rtl:space-x-reverse items-center">
+                <svg className="shrink-0 w-3.5 h-3.5 text-utility-600 dark:text-utility-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                </svg>
+                <span className="leading-tight">Development workflow</span>
+              </li>
+              <li className="flex space-x-2 rtl:space-x-reverse items-center">
+                <svg className="shrink-0 w-3.5 h-3.5 text-utility-600 dark:text-utility-500" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                  <path d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z" />
+                </svg>
+                <span className="leading-tight">Limitless business automation</span>
+              </li>
+            </ul>
+          </div>
+          <div className="hidden p-4 bg-neutral-50 rounded-lg dark:bg-neutral-800" id="faq" role="tabpanel" aria-labelledby="faq-tab">
+            <div id="accordion-flush" data-accordion="collapse" data-active-classes="bg-neutral-50 dark:bg-neutral-800 text-neutral-900 dark:text-neutral-50" data-inactive-classes="text-neutral-500 dark:text-neutral-400">
+              <h2 id="accordion-flush-heading-1">
+                <button type="button" className="flex items-center justify-between w-full py-5 font-medium text-left rtl:text-right text-neutral-500 border-b border-neutral-200 dark:border-neutral-700 dark:text-neutral-400" data-accordion-target="#accordion-flush-body-1" aria-expanded="true" aria-controls="accordion-flush-body-1">
+                  <span>What is Flowbite?</span>
+                  <svg data-accordion-icon className="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
+                  </svg>
+                </button>
+              </h2>
+              <div id="accordion-flush-body-1" className="hidden" aria-labelledby="accordion-flush-heading-1">
+                <div className="py-5 border-b border-neutral-200 dark:border-neutral-700">
+                  <p className="mb-2 text-neutral-500 dark:text-neutral-400">Flowbite is an open-source library of interactive components built on top of Tailwind CSS including buttons, dropdowns, modals, navbars, and more.</p>
+                  <p className="text-neutral-500 dark:text-neutral-400">Check out this guide to learn how to <a href="/docs/getting-started/introduction/" className="text-utility-600 dark:text-utility-500 hover:underline">get started</a> and start developing websites even faster with components on top of Tailwind CSS.</p>
+                </div>
+              </div>
+              <h2 id="accordion-flush-heading-2">
+                <button type="button" className="flex items-center justify-between w-full py-5 font-medium text-left rtl:text-right text-neutral-500 border-b border-neutral-200 dark:border-neutral-700 dark:text-neutral-400" data-accordion-target="#accordion-flush-body-2" aria-expanded="false" aria-controls="accordion-flush-body-2">
+                  <span>Is there a Figma file available?</span>
+                  <svg data-accordion-icon className="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
+                  </svg>
+                </button>
+              </h2>
+              <div id="accordion-flush-body-2" className="hidden" aria-labelledby="accordion-flush-heading-2">
+                <div className="py-5 border-b border-neutral-200 dark:border-neutral-700">
+                  <p className="mb-2 text-neutral-500 dark:text-neutral-400">Flowbite is first conceptualized and designed using the Figma software so everything you see in the library has a design equivalent in our Figma file.</p>
+                  <p className="text-neutral-500 dark:text-neutral-400">Check out the <a href="https://flowbite.com/figma/" className="text-utility-600 dark:text-utility-500 hover:underline">Figma design system</a> based on the utility classes from Tailwind CSS and components from Flowbite.</p>
+                </div>
+              </div>
+              <h2 id="accordion-flush-heading-3">
+                <button type="button" className="flex items-center justify-between w-full py-5 font-medium text-left rtl:text-right text-neutral-500 border-b border-neutral-200 dark:border-neutral-700 dark:text-neutral-400" data-accordion-target="#accordion-flush-body-3" aria-expanded="false" aria-controls="accordion-flush-body-3">
+                  <span>What are the differences between Flowbite and Tailwind UI?</span>
+                  <svg data-accordion-icon className="w-3 h-3 rotate-180 shrink-0" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                    <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5 5 1 1 5" />
+                  </svg>
+                </button>
+              </h2>
+              <div id="accordion-flush-body-3" className="hidden" aria-labelledby="accordion-flush-heading-3">
+                <div className="py-5 border-b border-neutral-200 dark:border-neutral-700">
+                  <p className="mb-2 text-neutral-500 dark:text-neutral-400">The main difference is that the core components from Flowbite are open source under the MIT license, whereas Tailwind UI is a paid product. Another difference is that Flowbite relies on smaller and standalone components, whereas Tailwind UI offers sections of pages.</p>
+                  <p className="mb-2 text-neutral-500 dark:text-neutral-400">However, we actually recommend using both Flowbite, Flowbite Pro, and even Tailwind UI as there is no technical reason stopping you from using the best of two worlds.</p>
+                  <p className="mb-2 text-neutral-500 dark:text-neutral-400">Learn more about these technologies:</p>
+                  <ul className="ps-5 text-neutral-500 list-disc dark:text-neutral-400">
+                    <li><a href="https://flowbite.com/pro/" className="text-utility-600 dark:text-utility-500 hover:underline">Flowbite Pro</a></li>
+                    <li><a href="https://tailwindui.com/" rel="nofollow" className="text-utility-600 dark:text-utility-500 hover:underline">Tailwind UI</a></li>
+                  </ul>
+                </div>
+              </div>
             </div>
-          </a>
-          <a href="#" className="w-full sm:w-auto bg-neutral-800 hover:bg-neutral-700 focus:ring-4 focus:outline-none focus:ring-neutral-300 text-neutral-50 rounded-lg inline-flex items-center justify-center px-4 py-2.5 dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:focus:ring-neutral-700">
-            <svg className="me-3 w-7 h-7" aria-hidden="true" focusable="false" data-prefix="fab" data-icon="google-play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512"><path fill="currentColor" d="M325.3 234.3L104.6 13l280.8 161.2-60.1 60.1zM47 0C34 6.8 25.3 19.2 25.3 35.3v441.3c0 16.1 8.7 28.5 21.7 35.3l256.6-256L47 0zm425.2 225.6l-58.9-34.1-65.7 64.5 65.7 64.5 60.1-34.1c18-14.3 18-46.5-1.2-60.8zM104.6 499l280.8-161.2-60.1-60.1L104.6 499z"></path></svg>
-            <div className="text-left rtl:text-right">
-              <div className="mb-1 text-xs">Get in on</div>
-              <div className="-mt-1 font-sans text-sm font-semibold">{currentUser?.email || 'hugofsp10@gmail.com'}</div>
-            </div>
-          </a>
+          </div>
         </div>
       </div>
     </>

@@ -2,9 +2,55 @@
 DO NOT USE THIS FILE
 USE app/assets/tailwind/application.css FILE INSTEAD
 */
-/* @import "tailwindcss";
 @import "flowbite";
-@custom-variant dark (&:where(.dark, .dark *)); */
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+/* Override Flowbite tab styles */
+[role="tab"][aria-selected="true"] {
+  color: var(--color-utility-600) !important;
+  border-color: var(--color-utility-600) !important;
+}
+
+.dark [role="tab"][aria-selected="true"] {
+  color: var(--color-utility-500) !important;
+  border-color: var(--color-utility-500) !important;
+}
+
+@theme {
+  /* To create custom variants of any color use: */
+  /* rails "theme:generate[utility,#547734]" */
+  /* rails "theme:generate[neutral,#547734]" */
+  /* rails "theme:generate[anyNameYouWant,#547734]" to add a new color with all variants */
+  /* the main color is the variant -500 */
+
+  /* Color related to navbars, menus, pages, cards, etc. */
+  --color-neutral-50: #fafafa;   /* zinc-50 */
+  --color-neutral-100: #f4f4f5;  /* zinc-100 */
+  --color-neutral-200: #e4e4e7;  /* zinc-200 */
+  --color-neutral-300: #d4d4d8;  /* zinc-300 */
+  --color-neutral-400: #a1a1aa;  /* zinc-400 */
+  --color-neutral-500: #71717a;  /* zinc-500 */
+  --color-neutral-600: #52525b;  /* zinc-600 */
+  --color-neutral-700: #3f3f46;  /* zinc-700 */
+  --color-neutral-800: #27272a;  /* zinc-800 */
+  --color-neutral-900: #18181b;  /* zinc-900 */
+  --color-neutral-950: #09090b;  /* zinc-950 */
+
+  /* Color related to buttons and links */
+  --color-utility-50: #F2FCE3;   /* red-50 */
+  --color-utility-100: #E7FACC;  /* red-100 */
+  --color-utility-200: #D0F49A;  /* red-200 */
+  --color-utility-300: #B8EF67;  /* red-300 */
+  --color-utility-400: #9FE930;  /* red-400 */
+  --color-utility-500: #84CC16;  /* red-500 */
+  --color-utility-600: #68A111;  /* red-600 */
+  --color-utility-700: #507C0D;  /* red-700 */
+  --color-utility-800: #355309;  /* red-800 */
+  --color-utility-900: #1B2904;  /* red-900 */
+  --color-utility-950: #0C1202;  /* red-950 */
+}
+
 /*
 IDK WHY, BUT THE CONFIG OF DARK MODE, 
 TAILWIND AND FLOWBITE MUST BE IN app/assets/tailwind/application.css

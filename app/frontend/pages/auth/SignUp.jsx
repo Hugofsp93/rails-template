@@ -8,6 +8,7 @@ export default function SignUp() {
   const [errors, setErrors] = useState({})
   const { data, setData, post, processing } = useForm({
     user: {
+      name: '',
       email: '',
       password: '',
       password_confirmation: '',
@@ -17,6 +18,10 @@ export default function SignUp() {
 
   const validateForm = () => {
     const newErrors = {}
+
+    if (!data.user.name) {
+      newErrors.name = 'Name is required'
+    }
 
     if (!data.user.email) {
       newErrors.email = 'E-mail is required'
@@ -76,7 +81,24 @@ export default function SignUp() {
                 Create an account
               </h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit} noValidate>
-                <div className="h-[85px]">
+                <div className="h-[75px]">
+                  <label htmlFor="name" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Name</label>
+                  <input
+                    name="name"
+                    id="name"
+                    type="name"
+                    placeholder="Your name"
+                    onChange={(e) => handleChange('name', e.target.value)}
+                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
+                      errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
+                    }`}
+                    required
+                  />
+                  {errors.name && (
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.name}</p>
+                  )}
+                </div>
+                <div className="h-[75px]">
                   <label htmlFor="email" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your email</label>
                   <input
                     name="email"
@@ -85,15 +107,15 @@ export default function SignUp() {
                     placeholder="name@email.com"
                     onChange={(e) => handleChange('email', e.target.value)}
                     className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                      errors.email ? 'border-utility-500 focus:ring-utility-500 focus:border-utility-500' : 'focus:ring-utility-500 focus:border-utility-500'
+                      errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
                     }`}
                     required
                   />
                   {errors.email && (
-                    <p className="mt-1 text-sm text-utility-600 dark:text-utility-500">{errors.email}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.email}</p>
                   )}
                 </div>
-                <div className="h-[85px]">
+                <div className="h-[75px]">
                   <label htmlFor="password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Password</label>
                   <input
                     type="password"
@@ -102,14 +124,14 @@ export default function SignUp() {
                     placeholder="••••••••"
                     onChange={(e) => handleChange('password', e.target.value)}
                     className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                      errors.password ? 'border-utility-500 focus:ring-utility-500 focus:border-utility-500' : 'focus:ring-utility-500 focus:border-utility-500'
+                      errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
                     }`}
                   />
                   {errors.password && (
-                    <p className="mt-1 text-sm text-utility-600 dark:text-utility-500">{errors.password}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.password}</p>
                   )}
                 </div>
-                <div className="h-[85px]">
+                <div className="h-[75px]">
                   <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Confirm password</label>
                   <input
                     type="password"
@@ -118,22 +140,23 @@ export default function SignUp() {
                     placeholder="••••••••"
                     onChange={(e) => handleChange('password_confirmation', e.target.value)}
                     className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                      errors.password_confirmation ? 'border-utility-500 focus:ring-utility-500 focus:border-utility-500' : 'focus:ring-utility-500 focus:border-utility-500'
+                      errors.password_confirmation ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
                     }`}
                   />
                   {errors.password_confirmation && (
-                    <p className="mt-1 text-sm text-utility-600 dark:text-utility-500">{errors.password_confirmation}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.password_confirmation}</p>
                   )}
                 </div>
-                <div className="h-[40px]">
+                <div className="h-[40px] mt-10">
                   <div className="flex items-start">
                     <div className="flex items-center h-5">
                       <input
                         id="terms"
                         aria-describedby="terms"
                         type="checkbox"
+                        checked={data.user.terms}
                         onChange={(e) => handleChange('terms', e.target.checked)}
-                        className="w-4 h-4 border border-neutral-300 rounded-sm bg-neutral-50 accent-utility-500 focus:ring-1 focus:ring-neutral-50 dark:bg-neutral-700 dark:border-neutral-700 dark:focus:ring-neutral-950 dark:ring-offset-neutral-800 dark:focus:ring-offset-neutral-800"
+                        className="w-4 h-4 bg-neutral-100 border-neutral-300 rounded text-utility-700 focus:ring-utility-700 dark:focus:ring-neutral-950 dark:focus:bg-neutral-800 dark:focus:border-neutral-800 dark:bg-neutral-800 dark:text-utility-600 dark:border-neutral-800"
                       />
                     </div>
                     <div className="ml-3 text-sm">
@@ -141,16 +164,16 @@ export default function SignUp() {
                     </div>
                   </div>
                   {errors.terms && (
-                    <p className="text-sm text-utility-600 dark:text-utility-500">{errors.terms}</p>
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.terms}</p>
                   )}
                 </div>
                 <button
                   type="submit"
                   disabled={processing}
-                  className="w-full text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-utility-500 dark:hover:bg-utility-600 dark:focus:ring-utility-800">
+                  className="w-full text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mb-2 text-center dark:bg-utility-600 dark:hover:bg-utility-500 dark:focus:ring-utility-800">
                   {processing ? 'Signing up...' : 'Create an account'}
                   </button>
-                <p className="text-sm font-light text-neutral-500 dark:text-neutral-400">
+                <p className="text-sm text-center font-light text-neutral-500 dark:text-neutral-400">
                   Already have an account? <a href="/sign_in" className="font-medium text-neutral-800 hover:underline dark:text-neutral-200">Login here</a>
                 </p>
               </form>
@@ -182,8 +205,8 @@ export default function SignUp() {
               </p>
             </div>
             <div className="flex items-center p-4 md:p-5 border-t border-neutral-200 rounded-b dark:border-neutral-700">
-              <button data-modal-hide="static-modal" type="button" onClick={() => document.getElementById('terms').checked = true} className="text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-utility-500 dark:hover:bg-utility-600 dark:focus:ring-utility-800 dark:focus:ring-2">I accept</button>
-              <button data-modal-hide="static-modal" type="button" onClick={() => document.getElementById('terms').checked = false} className="py-2.5 px-5 ms-3 text-sm font-medium text-neutral-900 focus:outline-none bg-neutral-50 rounded-lg border border-neutral-200 hover:bg-neutral-50 hover:text-neutral-800 focus:z-10 focus:ring-2 focus:ring-neutral-100 dark:focus:ring-neutral-700 dark:bg-neutral-800 dark:text-neutral-50 dark:border-neutral-700 dark:hover:text-neutral-200 dark:hover:bg-neutral-800">Decline</button>
+              <button data-modal-hide="static-modal" type="button" onClick={() => handleChange('terms', true)} className="text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-utility-600 dark:hover:bg-utility-500 dark:focus:ring-utility-800 dark:focus:ring-2">I accept</button>
+              <button data-modal-hide="static-modal" type="button" onClick={() => handleChange('terms', false)} className="py-2.5 px-5 ms-3 text-sm font-medium text-neutral-900 focus:outline-none bg-neutral-50 rounded-lg border border-neutral-200 hover:bg-neutral-50 hover:text-neutral-800 focus:z-10 focus:ring-2 focus:ring-neutral-100 dark:focus:ring-neutral-700 dark:bg-neutral-800 dark:text-neutral-50 dark:border-neutral-700 dark:hover:text-neutral-200 dark:hover:bg-neutral-800">Decline</button>
             </div>
           </div>
         </div>

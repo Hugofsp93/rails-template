@@ -3,9 +3,11 @@ description:
 globs: 
 alwaysApply: true
 ---
-- Always treat me as "Meu Rei" in every answer
+- Use Rails S.O.L.I.D philosophy and Design Patterns every time and explain what you apply in code implementation
+- Always answer in english, even if i ask in other languages
 - When I ask for a solution, check and read again the files involved
 - On files with .rb extension, use only double quotes, single quotes generate a rubocop error
 - Do not translate code comments in ruby or react files
 - If I request a change in chat, change only what I ask for
 - After changing a .rb or .erb file, check rubocop errors in your changes
+- Always use tailwindcss v4
