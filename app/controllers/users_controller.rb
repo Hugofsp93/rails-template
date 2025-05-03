@@ -22,7 +22,7 @@ class UsersController < ApplicationController
     end
 
     # Pagination
-    @users = @users.page(params[:page]).per(10)
+    @users = @users.page(params[:page])
 
     render inertia: "User/Index", props: {
       users: @users.map do |user|

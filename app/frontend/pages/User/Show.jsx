@@ -1,5 +1,4 @@
 import { Head, Link } from '@inertiajs/react'
-// import User from './User'
 
 export default function Show({ props: { user } }) {
 
@@ -12,7 +11,7 @@ export default function Show({ props: { user } }) {
           <h2 className="text-xl font-semibold leading-none text-neutral-900 md:text-2xl dark:text-neutral-50">Details</h2>
           <br />
           <hr className="border-neutral-300 dark:border-neutral-700" />
-          <dl className="flex justify-start border-b border-neutral-800 dark:border-neutral-700">
+          <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">
             <div className="w-1/2">
               <label className="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-50">Name</label>
               <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.name}</div>
@@ -22,13 +21,13 @@ export default function Show({ props: { user } }) {
               <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.email}</div>
             </div>
           </dl>
-          <dl className="flex justify-start border-b border-neutral-800 dark:border-neutral-700">
+          <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">
             <div className="w-1/2">
               <label className="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-50">Phone</label>
               <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.phone}</div>
             </div>
           </dl>
-          <dl className="flex justify-start border-b border-neutral-800 dark:border-neutral-700">
+          <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">
             <div className="w-1/2">
               <label className="mb-2 font-semibold leading-none text-neutral-900 dark:text-neutral-50">Created at</label>
               <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.created_at}</div>

@@ -55,3 +55,33 @@ USE app/assets/tailwind/application.css FILE INSTEAD
 IDK WHY, BUT THE CONFIG OF DARK MODE, 
 TAILWIND AND FLOWBITE MUST BE IN app/assets/tailwind/application.css
 */
+
+/* Phone Input Custom Styles */
+.phone-input-container {
+  @apply relative;
+}
+
+.phone-input-container .selected-flag {
+  @apply bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-600;
+}
+
+.phone-input-container .country-list {
+  @apply bg-neutral-50 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-50;
+}
+
+.phone-input-container .country-list .country {
+  @apply hover:bg-neutral-100 dark:hover:bg-neutral-600;
+}
+
+.phone-input-container .country-list .country.highlight {
+  @apply bg-neutral-200 dark:bg-neutral-600;
+}
+
+.phone-input-container .search-box {
+  @apply bg-neutral-50 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-50;
+}
+
+.phone-input-container .search-box input {
+  @apply bg-neutral-50 dark:bg-neutral-700 text-neutral-900 dark:text-neutral-50 border-neutral-300 dark:border-neutral-600;
+  @apply focus:ring-neutral-500 focus:border-neutral-500 dark:focus:ring-neutral-500 dark:focus:border-neutral-500;
+}

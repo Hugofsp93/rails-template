@@ -1,103 +1,9 @@
 import Toast from '../../components/Toast'
 import { useToast } from '../../hooks/useToast'
 import { Link } from '@inertiajs/react'
-import PhoneInput from 'react-phone-input-2'
 import 'react-phone-input-2/lib/style.css'
-
-// Custom styles for phone input dark mode
-const customStyles = `
-  .react-tel-input .form-control:focus {
-    box-shadow: none !important;
-  }
-
-  .react-tel-input .selected-flag.open {
-    background-color: transparent !important;
-  }
-
-  .dark .react-tel-input .country-list {
-    background-color: rgb(64 64 64) !important;
-  }
-
-  .dark .react-tel-input .country-list .country.highlight {
-    background-color: rgb(82 82 82) !important;
-  }
-
-  .dark .react-tel-input .country-list .country:hover {
-    background-color: rgb(82 82 82) !important;
-  }
-
-  .react-tel-input .country-list {
-    margin: 0 !important;
-    top: calc(100% + 1px) !important;
-  }
-
-  .react-tel-input .country-list .search-box {
-    margin: 0 !important;
-    padding: 8px !important;
-    background-color: inherit !important;
-    width: 100% !important;
-    border: none !important;
-    border-bottom: 2px solid rgb(212 212 212) !important;
-  }
-
-  .dark .react-tel-input .country-list .search-box {
-    border-bottom: 2px solid rgb(212 212 212) !important;
-  }
-
-  .react-tel-input .country-list .search {
-    background-color: rgb(250 250 250) !important;
-    border: none !important;
-    border-radius: 0 !important;
-    margin: 0 !important;
-    padding: 6px 10px !important;
-    color: rgb(23 23 23) !important;
-  }
-
-  .dark .react-tel-input .country-list .search {
-    background-color: rgb(64 64 64) !important;
-    color: rgb(250 250 250) !important;
-  }
-
-  .react-tel-input .country-list .search:focus {
-    outline: none !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  .react-tel-input .country-list .search::placeholder {
-    color: rgb(115 115 115) !important;
-  }
-
-  .dark .react-tel-input .country-list .search::placeholder {
-    color: rgb(229 229 229) !important;
-  }
-
-  .react-tel-input .selected-flag:hover,
-  .react-tel-input .selected-flag:focus,
-  .react-tel-input .selected-flag.open {
-    background-color: transparent !important;
-  }
-
-  .dark .react-tel-input .selected-flag:hover,
-  .dark .react-tel-input .selected-flag:focus,
-  .dark .react-tel-input .selected-flag.open {
-    background-color: transparent !important;
-  }
-
-  .react-tel-input .country-list .search-box .search-box:focus {
-    outline: none !important;
-    box-shadow: none !important;
-    border: none !important;
-  }
-
-  .react-tel-input .country-list .no-entries-message {
-    color: rgb(115 115 115) !important;
-  }
-
-  .dark .react-tel-input .country-list .no-entries-message {
-    color: rgb(163 163 163) !important;
-  }
-`
+import '../../styles/phoneInput.css'
+import PhoneInputWrapper from '../../components/PhoneInputWrapper'
 
 export default function Form({ errors, data, processing, handleChange, handleSubmit, isEditingPassword, setIsEditingPassword, isEdit }) {
   const { toast } = useToast()
@@ -117,7 +23,6 @@ export default function Form({ errors, data, processing, handleChange, handleSub
 
   return (
     <>
-      <style>{customStyles}</style>
       { toast && <Toast {...toast} /> }
       <form onSubmit={handleSubmit} noValidate>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 sm:gap-6">
@@ -148,25 +53,13 @@ export default function Form({ errors, data, processing, handleChange, handleSub
             {errors.email && <p className="mt-2 text-xs text-red-600">{getErrorMessage('email')}</p>}
           </div>
           <div className="h-[75px]">
-            <label htmlFor="phone" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Phone</label>
-            <PhoneInput
-              country={'br'}
+            <PhoneInputWrapper
+              label="Phone"
               value={data.user.phone}
-              onChange={(phone) => handleChange('user.phone', phone)}
-              inputClass={`!w-full !h-[42px] !bg-neutral-50 !border !border-neutral-300 !text-neutral-900 !text-sm !rounded-lg !pl-12 !pr-2.5 dark:!bg-neutral-700 dark:!text-neutral-50 dark:!border-neutral-700 ${errors.phone ? '!border-red-500' : ''}`}
-              containerClass="!w-full"
-              buttonClass={`!h-[42px] !border !border-neutral-300 dark:!border-neutral-700 !rounded-l-lg !bg-neutral-50 dark:!bg-neutral-700 ${errors.phone ? '!border-red-500' : ''}`}
-              dropdownClass="!bg-neutral-50 dark:!bg-neutral-700 !text-neutral-900 dark:!text-neutral-50"
-              searchClass="!bg-neutral-50 dark:!bg-neutral-700 !text-neutral-900 dark:!text-neutral-50 !border-b-neutral-300 !outline-none !shadow-none"
-              buttonStyle={{ backgroundColor: 'transparent' }}
-              dropdownStyle={{ backgroundColor: 'var(--neutral-50)', color: 'var(--neutral-900)' }}
-              searchStyle={{ backgroundColor: 'var(--neutral-50)', color: 'var(--neutral-900)', outline: 'none', boxShadow: 'none' }}
-              enableSearch
-              disableSearchIcon
-              countryCodeEditable={false}
-              searchPlaceholder="Search country..."
+              onChange={(value) => handleChange('user.phone', value)}
+              error={errors.phone}
+              required
             />
-            {errors.phone && <p className="mt-2 text-xs text-red-600">{getErrorMessage('phone')}</p>}
           </div>
         </div>
 
