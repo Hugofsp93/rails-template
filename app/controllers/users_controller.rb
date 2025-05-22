@@ -1,6 +1,5 @@
 class UsersController < ApplicationController
   before_action :set_user, only: %i[ show edit update destroy ]
-  before_action :authenticate_user!
   before_action :authorize_user!, only: %i[ edit update destroy ]
 
   # GET /admin/users
@@ -21,18 +20,18 @@ class UsersController < ApplicationController
       end
     end
 
-    # Pagination
-    @users = @users.page(params[:page])
+    # Pagination with Pagy - custom items per page for users
+    @pagy, @users = pagy(@users, limit: 10)
 
     render inertia: "User/Index", props: {
       users: @users.map do |user|
         serialize_user(user)
       end,
       pagination: {
-        total: @users.total_count,
-        per_page: @users.limit_value,
-        current_page: @users.current_page,
-        total_pages: @users.total_pages
+        currentPage: @pagy.page,
+        totalPages: @pagy.pages,
+        totalItems: @pagy.count,
+        perPage: @pagy.limit
       }
     }
   end
@@ -75,7 +74,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /admin/users/1
   def update
     # Don't require current password for admin updates
-    if current_user.id == 2 # current_user.admin? (no futuro, quando implementar o rolify)
+    if current_user.id == 2 # current_user.admin? (in the future, when implementing rolify)
       # Remove password fields if they're blank
       if user_params[:password].blank?
         params[:user].delete(:password)
@@ -142,6 +141,7 @@ class UsersController < ApplicationController
       ])
     end
 
+    # TODO:
     def authorize_user!
       unless current_user.id == 2 || current_user == @user # current_user.admin? (no futuro, quando implementar o rolify)
         redirect_to users_url, alert: "You are not authorized to perform this action."

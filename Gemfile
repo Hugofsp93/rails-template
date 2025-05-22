@@ -79,5 +79,5 @@ gem "premailer-rails"
 gem "httparty"
 
 # Pagination
-gem "kaminari", "~> 1.2"
-gem "kaminari-activerecord", "~> 1.2"
+gem "pagy"
+gem "ransack"

@@ -1,4 +1,6 @@
 module ApplicationHelper
+  include Pagy::Frontend
+
   def mailer_domain
     if Rails.env.production?
       "https://app.hugofsp.com"

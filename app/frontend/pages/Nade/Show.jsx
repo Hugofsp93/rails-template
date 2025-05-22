@@ -1,10 +1,10 @@
 import { Head, Link } from '@inertiajs/react'
 
-export default function Show({ props: { user } }) {
+export default function Show({ props: { nade } }) {
 
   return (
     <>
-      <Head title="User Details" />
+      <Head title="Nade Details" />
 
       <section className="w-full md:mt-10">
         <div className="bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded-xl py-8 px-8 mx-auto max-w-4xl">
@@ -13,33 +13,41 @@ export default function Show({ props: { user } }) {
           <hr className="border-neutral-300 dark:border-neutral-700" />
           <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">
             <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Name</label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.name}</div>
+              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Title</label>
+              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{nade.title}</div>
             </div>
+
             <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Email</label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.email}</div>
+              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Active</label>
+              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{nade.active ? 'Active' : 'Inactive'}</div>
             </div>
+
+
           </dl>
           <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">
             <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Phone</label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.phone}</div>
+              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Description</label>
+              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{nade.description}</div>
             </div>
+
+            <div className="w-1/2">
+              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Map Name</label>
+              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{nade.map_name}</div>
+            </div>
+
+
           </dl>
           <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">
             <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Created at</label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.created_at}</div>
+              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Team Function</label>
+              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{nade.team_function}</div>
             </div>
-            <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Updated at</label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.updated_at}</div>
-            </div>
+
+
           </dl>
           <div className="flex items-center">
             <Link
-              href={`/admin/users/${user.id}/edit`}
+              href={`/nades/${nade.id}/edit`}
               type="button"
               className="inline-flex items-center px-8 py-2.5 mt-8 text-sm font-medium text-center text-neutral-50 bg-utility-700 rounded-lg focus:ring-neutral-200 dark:focus:ring-utility-500 hover:bg-utility-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
@@ -47,7 +55,7 @@ export default function Show({ props: { user } }) {
               Edit
             </Link>
             <Link
-              href="/admin/users"
+              href="/nades"
               type="button"
               className="inline-flex items-center px-8 py-2.5 mt-8 text-sm font-medium text-center hover:underline text-utility-700 hover:color-utility-600 dark:text-neutral-200"
             >

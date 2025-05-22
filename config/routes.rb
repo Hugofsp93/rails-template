@@ -1,7 +1,8 @@
 Rails.application.routes.draw do
+  resources :nades
   # Routes only for authenticated users
   authenticated :user do
-    resources :users, path: "admin/users"
+      resources :users, path: "admin/users"
   end
 
   # Public routes
