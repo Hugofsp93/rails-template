@@ -1,7 +1,9 @@
 import { Head, Link } from '@inertiajs/react'
 import { formatDate, formatDateOnly, formatTime, formatNumber } from '../../utils/formatters'
 
-export default function Show({ props: { <%= singular_table_name %> } }) {
+<% references = attributes.select { |attr| attr.type == :references } -%>
+export default function Show({ props: { <%= singular_table_name %>, <%= references.map { |attribute| "#{attribute.name.singularize}" }.join(",\n") %> } }) {
+
   return (
     <>
       <Head title="<%= singular_table_name.titleize %> Details" />
@@ -9,10 +11,10 @@ export default function Show({ props: { <%= singular_table_name %> } }) {
       <section className="w-full md:mt-10">
         <div className="bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded-xl py-8 px-8 mx-auto max-w-4xl">
           <h2 className="mb-4 text-xl font-bold text-neutral-900 dark:text-neutral-50"><%= singular_table_name.titleize %> Details</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-0 gap-y-4">
 <% attributes.reject { |attr| attr.type == :text }.each do |attribute| -%>
-            <hr className="border-neutral-300 dark:border-neutral-700" />
             <div>
+              <hr className="border-neutral-300 dark:border-neutral-700" />
               <label className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">
                 <%= attribute.human_name %>
               </label>
@@ -26,7 +28,7 @@ export default function Show({ props: { <%= singular_table_name %> } }) {
 <% elsif attribute.type == :time -%>
                 {formatTime(<%= singular_table_name %>.<%= attribute.name %>)}
 <% elsif attribute.type == :references -%>
-                {<%= singular_table_name %>.<%= attribute.name %>?.name || <%= singular_table_name %>.<%= attribute.name %>?.id}
+                {<%= attribute.name %>.name || <%= attribute.name %>.id}
 <% else -%>
                 {formatNumber(<%= singular_table_name %>.<%= attribute.name %>, '<%= attribute.type %>')}
 <% end -%>

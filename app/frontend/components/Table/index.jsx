@@ -8,7 +8,7 @@ export default function Table({
   className = ''
 }) {
   return (
-    <div className="relative overflow-x-auto min-h-[230px]">
+    <div className="relative overflow-x-auto min-h-[300px]">
       <table className={`w-full text-sm text-left text-neutral-500 dark:text-neutral-400 ${className}`}>
         <thead className="text-xs text-neutral-700 uppercase bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-400">
           <tr>
@@ -40,7 +40,7 @@ export default function Table({
                 </td>
               ))}
               {actions && (
-                <td className="sticky right-0 bg-neutral-50 dark:bg-neutral-800 px-4 py-5 flex items-center justify-end">
+                <td className="right-0 px-4 py-5 flex items-center justify-end">
                   <button 
                     id={`${item.id}-button`} 
                     data-dropdown-toggle={`${item.id}`} 

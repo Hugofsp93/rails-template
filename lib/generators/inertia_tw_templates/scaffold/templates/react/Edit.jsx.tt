@@ -14,6 +14,8 @@ export default function Edit({ props: { <%= singular_table_name %> } }) {
 <%- attributes.each do |attribute| -%>
 <% if [:datetime, :date, :time].include?(attribute.type) -%>
       <%= attribute.name %>: formatValueForInput(<%= singular_table_name %>.<%= attribute.name %>, '<%= attribute.type %>'),
+<% elsif attribute.type == :references -%>
+      <%= attribute.name %>_id: <%= singular_table_name %>.<%= attribute.name %>_id,
 <% else -%>
       <%= attribute.name %>: <%= singular_table_name %>.<%= attribute.name %>,
 <% end -%>

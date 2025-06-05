@@ -6,19 +6,24 @@
 export const formatDate = (dateString) => {
   if (!dateString) return '-'
   
-  // Creates date and adjusts to Brazilian timezone
-  const date = new Date(dateString)
-  const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000)
-  
-  return utcDate.toLocaleString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: false
-  })
+  try {
+    // Parse the date string to get individual components
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return '-'
+
+    // Extract date components
+    const day = String(date.getUTCDate()).padStart(2, '0')
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+    const year = date.getUTCFullYear()
+    const hours = String(date.getUTCHours()).padStart(2, '0')
+    const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+    const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+    
+    return `${day}/${month}/${year} ${hours}:${minutes}:${seconds}`
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return '-'
+  }
 }
 
 /**
@@ -29,16 +34,21 @@ export const formatDate = (dateString) => {
 export const formatDateOnly = (dateString) => {
   if (!dateString) return '-'
   
-  // Creates date and adjusts to Brazilian timezone
-  const date = new Date(dateString)
-  const utcDate = new Date(date.getTime() + date.getTimezoneOffset() * 60000)
-  
-  return utcDate.toLocaleDateString('pt-BR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric',
-    timeZone: 'America/Sao_Paulo'
-  })
+  try {
+    // Parse the date string to get individual components
+    const date = new Date(dateString)
+    if (isNaN(date.getTime())) return '-'
+
+    // Extract date components
+    const day = String(date.getUTCDate()).padStart(2, '0')
+    const month = String(date.getUTCMonth() + 1).padStart(2, '0')
+    const year = date.getUTCFullYear()
+    
+    return `${day}/${month}/${year}`
+  } catch (error) {
+    console.error('Error formatting date:', error)
+    return '-'
+  }
 }
 
 /**
@@ -52,8 +62,14 @@ export const formatTime = (timeString) => {
   try {
     // If it's an ISO date, extract only the time part
     if (timeString.includes('T')) {
-      const timePart = timeString.split('T')[1].split('.')[0]
-      return timePart
+      const date = new Date(timeString)
+      if (isNaN(date.getTime())) return '-'
+
+      const hours = String(date.getUTCHours()).padStart(2, '0')
+      const minutes = String(date.getUTCMinutes()).padStart(2, '0')
+      const seconds = String(date.getUTCSeconds()).padStart(2, '0')
+      
+      return `${hours}:${minutes}:${seconds}`
     }
     
     // If it's already a time string, format normally

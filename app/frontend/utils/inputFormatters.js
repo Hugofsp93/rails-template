@@ -17,8 +17,29 @@ export const formatDateTimeForInput = (dateString) => {
  */
 export const formatDateForInput = (dateString) => {
   if (!dateString) return ''
-  const date = new Date(dateString)
-  return date.toISOString().split('T')[0] // Format: YYYY-MM-DD
+  
+  // If the date string is in YYYY-MM-DD format, return it as is
+  if (/^\d{4,}-\d{2}-\d{2}$/.test(dateString)) {
+    return dateString
+  }
+  
+  // If the date string is in DD/MM/YYYY format, convert it
+  if (/^\d{1,2}\/\d{1,2}\/\d{4,}$/.test(dateString)) {
+    const [day, month, year] = dateString.split('/')
+    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+  }
+  
+  // For dates within JavaScript's valid range, use Date object
+  try {
+    const date = new Date(dateString)
+    if (!isNaN(date.getTime())) {
+      return date.toISOString().split('T')[0]
+    }
+  } catch (error) {
+    console.warn('Error formatting date:', error)
+  }
+  
+  return ''
 }
 
 /**
@@ -57,4 +78,40 @@ export const formatValueForInput = (value, type) => {
     default:
       return value || ''
   }
+}
+
+/**
+ * Validates date, datetime-local, and time input values
+ * @param {string} type - The input type (date, datetime-local, time)
+ * @param {string} value - The input value
+ * @returns {boolean} True if valid, false otherwise
+ */
+export function isValidDateInput(type, value) {
+  if (!value) return true;
+  
+  if (type === 'date') {
+    // Check if the date format is valid and year has at most 4 digits
+    const dateRegex = /^(\d{4})-\d{2}-\d{2}$/;
+    const match = value.match(dateRegex);
+    if (!match) return false;
+    
+    const year = parseInt(match[1]);
+    return year >= 1 && year <= 9999;
+  }
+  
+  if (type === 'datetime-local') {
+    // Check if the datetime format is valid and year has at most 4 digits
+    const datetimeRegex = /^(\d{4})-\d{2}-\d{2}T\d{2}:\d{2}(:\d{2})?$/;
+    const match = value.match(datetimeRegex);
+    if (!match) return false;
+    
+    const year = parseInt(match[1]);
+    return year >= 1 && year <= 9999;
+  }
+  
+  if (type === 'time') {
+    return /^\d{2}:\d{2}(:\d{2})?$/.test(value);
+  }
+  
+  return true;
 }
