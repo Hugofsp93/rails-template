@@ -22,7 +22,7 @@ export default function Table({
               </th>
             ))}
             {actions && (
-              <th scope="col" className="sticky bg-neutral-50 dark:bg-neutral-700 right-0 px-4 py-3">
+              <th scope="col" className="sticky bg-neutral-200 dark:bg-neutral-700 right-0 px-4 py-3">
                 <span className="sr-only">Actions</span>
               </th>
             )}
