@@ -89,7 +89,6 @@ class UsersController < ApplicationController
     else
       # For regular users, require current password
       if @user.update(user_params)
-        binding.pry
         bypass_sign_in(@user) # Prevent logout after update
         redirect_to user_url(@user), notice: "User was successfully updated."
       else

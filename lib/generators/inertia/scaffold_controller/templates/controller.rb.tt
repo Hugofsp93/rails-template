@@ -37,7 +37,9 @@ class <%= controller_class_name %>Controller < ApplicationController
   # GET <%= route_url %>/1
   def show
     render inertia: "<%= class_name %>/Show", props: {
-      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>)
+      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "      #{attribute.name.singularize}: serialize_#{attribute.name.singularize}(@#{singular_table_name}.#{attribute.name.singularize})" }.join(",\n") %>
     }
   end
 
@@ -45,14 +47,18 @@ class <%= controller_class_name %>Controller < ApplicationController
   def new
     @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
     render inertia: "<%= class_name %>/New", props: {
-      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>)
+      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "      #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
     }
   end
 
   # GET <%= route_url %>/1/edit
   def edit
     render inertia: "<%= class_name %>/Edit", props: {
-      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>)
+      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "      #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
     }
   end
 
@@ -63,7 +69,11 @@ class <%= controller_class_name %>Controller < ApplicationController
     if @<%= singular_table_name %>.save
       redirect_to <%= singular_table_name %>_url(@<%= singular_table_name %>), notice: "<%= human_name %> was successfully created."
     else
-      redirect_to new_<%= singular_table_name %>_url, inertia: { errors: @<%= singular_table_name %>.errors }
+      redirect_to new_<%= singular_table_name %>_url, inertia: {
+        errors: @<%= singular_table_name %>.errors,
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "        #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
+      }
     end
   end
 
@@ -72,7 +82,11 @@ class <%= controller_class_name %>Controller < ApplicationController
     if @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
       redirect_to <%= singular_table_name %>_url(@<%= singular_table_name %>), notice: "<%= human_name %> was successfully updated."
     else
-      redirect_to edit_<%= singular_table_name %>_url(@<%= singular_table_name %>), inertia: { errors: @<%= singular_table_name %>.errors }
+      redirect_to edit_<%= singular_table_name %>_url(@<%= singular_table_name %>), inertia: {
+        errors: @<%= singular_table_name %>.errors,
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "        #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
+      }
     end
   end
 
@@ -105,6 +119,12 @@ class <%= controller_class_name %>Controller < ApplicationController
         :updated_at
       ])
     end
+
+<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+    def serialize_<%= attribute.name.singularize %>(<%= attribute.name.singularize %>)
+      <%= attribute.name.singularize %>.as_json
+    end
+<% end -%>
 
     def authorize_<%= singular_table_name %>!
       unless current_user.id == 2 || current_user == @<%= singular_table_name %> # current_user.admin?

@@ -1,14 +1,14 @@
 import { Link } from '@inertiajs/react'
 
 export default function Table({ 
-  columns, 
-  data, 
+  columns,
+  data,
   actions,
   onActionClick,
   className = ''
 }) {
   return (
-    <div className="overflow-x-auto">
+    <div className="relative overflow-x-auto min-h-[230px]">
       <table className={`w-full text-sm text-left text-neutral-500 dark:text-neutral-400 ${className}`}>
         <thead className="text-xs text-neutral-700 uppercase bg-neutral-200 dark:bg-neutral-700 dark:text-neutral-400">
           <tr>
@@ -22,7 +22,7 @@ export default function Table({
               </th>
             ))}
             {actions && (
-              <th scope="col" className="px-4 py-3">
+              <th scope="col" className="sticky bg-neutral-50 dark:bg-neutral-700 right-0 px-4 py-3">
                 <span className="sr-only">Actions</span>
               </th>
             )}
@@ -40,7 +40,7 @@ export default function Table({
                 </td>
               ))}
               {actions && (
-                <td className="px-4 py-3 flex items-center justify-end">
+                <td className="sticky right-0 bg-neutral-50 dark:bg-neutral-800 px-4 py-5 flex items-center justify-end">
                   <button 
                     id={`${item.id}-button`} 
                     data-dropdown-toggle={`${item.id}`} 

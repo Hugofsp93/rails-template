@@ -1,16 +1,27 @@
-import { Head, useForm } from '@inertiajs/react'
+import { Head, useForm, usePage } from '@inertiajs/react'
 import { useToast } from '../../hooks/useToast'
 import Toast from "../../components/Toast"
 import Form from './Form'
+import { formatValueForInput } from '../../utils/inputFormatters'
 
 export default function Edit({ props: { <%= singular_table_name %> } }) {
   const { toast } = useToast()
+<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+  const { <%= attribute.name.pluralize %> } = usePage().props
+<% end -%>
   const { data, setData, put, processing, errors } = useForm({
     <%= singular_table_name %>: {
-    <%- attributes.each do |attribute| -%>
+<%- attributes.each do |attribute| -%>
+<% if [:datetime, :date, :time].include?(attribute.type) -%>
+      <%= attribute.name %>: formatValueForInput(<%= singular_table_name %>.<%= attribute.name %>, '<%= attribute.type %>'),
+<% else -%>
       <%= attribute.name %>: <%= singular_table_name %>.<%= attribute.name %>,
-    <%- end -%>
-    }
+<% end -%>
+<%- end -%>
+    },
+<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+    <%= attribute.name.pluralize %>: <%= attribute.name.pluralize %> || [],
+<% end -%>
   })
 
   const handleChange = (field, value) => {
@@ -19,7 +30,10 @@ export default function Edit({ props: { <%= singular_table_name %> } }) {
       <%= singular_table_name %>: {
         ...prev.<%= singular_table_name %>,
         [field.split('.')[1]]: value
-      }
+      },
+<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+      <%= attribute.name.pluralize %>: prev.<%= attribute.name.pluralize %>,
+<% end -%>
     }))
   }
 

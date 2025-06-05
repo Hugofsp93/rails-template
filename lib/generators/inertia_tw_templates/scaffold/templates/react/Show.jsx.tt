@@ -1,64 +1,63 @@
 import { Head, Link } from '@inertiajs/react'
+import { formatDate, formatDateOnly, formatTime, formatNumber } from '../../utils/formatters'
 
 export default function Show({ props: { <%= singular_table_name %> } }) {
-
   return (
     <>
       <Head title="<%= singular_table_name.titleize %> Details" />
 
       <section className="w-full md:mt-10">
         <div className="bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded-xl py-8 px-8 mx-auto max-w-4xl">
-          <h2 className="text-xl font-semibold leading-none text-neutral-900 md:text-2xl dark:text-neutral-50">Details</h2>
-          <br />
-          <hr className="border-neutral-300 dark:border-neutral-700" />
-<% attributes.each_slice(2) do |attribute1, attribute2| -%>
-          <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">
-<% if attribute1.type == :boolean -%>
-            <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50"><%= attribute1.name.titleize %></label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{<%= singular_table_name %>.<%= attribute1.name %> ? 'Active' : 'Inactive'}</div>
-            </div>
-<% elsif attribute1.type == :datetime -%>
-            <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50"><%= attribute1.name.titleize %></label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{new Date(<%= singular_table_name %>.<%= attribute1.name %>).toLocaleString()}</div>
-            </div>
+          <h2 className="mb-4 text-xl font-bold text-neutral-900 dark:text-neutral-50"><%= singular_table_name.titleize %> Details</h2>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+<% attributes.reject { |attr| attr.type == :text }.each do |attribute| -%>
+            <hr className="border-neutral-300 dark:border-neutral-700" />
+            <div>
+              <label className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">
+                <%= attribute.human_name %>
+              </label>
+              <p className="text-neutral-900 dark:text-neutral-50">
+<% if attribute.type == :boolean -%>
+                {<%= singular_table_name %>.<%= attribute.name %> ? 'Yes' : 'No'}
+<% elsif attribute.type == :datetime -%>
+                {formatDate(<%= singular_table_name %>.<%= attribute.name %>)}
+<% elsif attribute.type == :date -%>
+                {formatDateOnly(<%= singular_table_name %>.<%= attribute.name %>)}
+<% elsif attribute.type == :time -%>
+                {formatTime(<%= singular_table_name %>.<%= attribute.name %>)}
+<% elsif attribute.type == :references -%>
+                {<%= singular_table_name %>.<%= attribute.name %>?.name || <%= singular_table_name %>.<%= attribute.name %>?.id}
 <% else -%>
-            <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50"><%= attribute1.name.titleize %></label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{<%= singular_table_name %>.<%= attribute1.name %>}</div>
+                {formatNumber(<%= singular_table_name %>.<%= attribute.name %>, '<%= attribute.type %>')}
+<% end -%>
+              </p>
             </div>
+<% end -%>
+          </div>
+
+<% if attributes.any? { |attr| attr.type == :text } -%>
+          <div className="mt-6">
+<% attributes.select { |attr| attr.type == :text }.each do |attribute| -%>
+            <div className="mb-4">
+              <hr className="border-neutral-300 dark:border-neutral-700" />
+              <label className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">
+                <%= attribute.human_name %>
+              </label>
+              <p className="text-neutral-900 dark:text-neutral-50 whitespace-pre-wrap">
+                {<%= singular_table_name %>.<%= attribute.name %>}
+              </p>
+            </div>
+<% end -%>
+          </div>
 <% end -%>
 
-<% if attribute2.present? -%>
-<% if attribute2.type == :boolean -%>
-            <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50"><%= attribute2.name.titleize %></label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{<%= singular_table_name %>.<%= attribute2.name %> ? 'Active' : 'Inactive'}</div>
-            </div>
-<% elsif attribute2.type == :datetime -%>
-            <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50"><%= attribute2.name.titleize %></label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{new Date(<%= singular_table_name %>.<%= attribute2.name %>).toLocaleString()}</div>
-            </div>
-<% else -%>
-            <div className="w-1/2">
-              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50"><%= attribute2.name.titleize %></label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{<%= singular_table_name %>.<%= attribute2.name %>}</div>
-            </div>
-<% end -%>
-
-<% end -%>
-
-          </dl>
-<% end -%>
           <div className="flex items-center">
             <Link
               href={`/<%= plural_table_name %>/${<%= singular_table_name %>.id}/edit`}
               type="button"
               className="inline-flex items-center px-8 py-2.5 mt-8 text-sm font-medium text-center text-neutral-50 bg-utility-700 rounded-lg focus:ring-neutral-200 dark:focus:ring-utility-500 hover:bg-utility-600 disabled:opacity-50 disabled:cursor-not-allowed"
             >
-              <svg aria-hidden="true" className="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fill-rule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clip-rule="evenodd"></path></svg>
+              <svg aria-hidden="true" className="mr-1 -ml-1 w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M17.414 2.586a2 2 0 00-2.828 0L7 10.172V13h2.828l7.586-7.586a2 2 0 000-2.828z"></path><path fillRule="evenodd" d="M2 6a2 2 0 012-2h4a1 1 0 010 2H4v10h10v-4a1 1 0 112 0v4a2 2 0 01-2 2H4a2 2 0 01-2-2V6z" clipRule="evenodd"></path></svg>
               Edit
             </Link>
             <Link

@@ -1,6 +1,6 @@
 # app/services/css_modifier_service.rb
 class CssModifierService
-  CSS_PATH = Rails.root.join("app/assets/tailwind/application.css")
+  CSS_PATH = Rails.root.join("app/frontend/styles/application.css")
 
   def self.update_variants(color_name, hex_color)
     variants = ColorVariantService.generate_variants(color_name, hex_color)

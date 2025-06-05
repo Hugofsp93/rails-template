@@ -40,18 +40,91 @@ export default function Form({ errors, data, processing, handleChange, handleSub
                 Active
               </label>
             </div>
+<% elsif attribute.type == :datetime -%>
+            <input
+              type="datetime-local"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Select date and time"
+              step="1"
+            />
+<% elsif attribute.type == :date -%>
+            <input
+              type="date"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Select date"
+            />
+<% elsif attribute.type == :time -%>
+            <input
+              type="time"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Select time"
+              step="1"
+            />
+<% elsif [:integer, :bigint].include?(attribute.type) -%>
+            <input
+              type="number"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Enter <%= attribute.name.titleize %>"
+              step="1"
+<% if attribute.type == :bigint -%>
+              min="-9223372036854775808"
+              max="9223372036854775807"
+<% else -%>
+              min="-2147483648"
+              max="2147483647"
+<% end -%>
+            />
+<% elsif [:float, :decimal].include?(attribute.type) -%>
+            <input
+              type="number"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Enter <%= attribute.name.titleize %>"
+              step="any"
+            />
+<% elsif attribute.type == :references -%>
+            <select
+              id="<%= attribute.name %>"
+              name="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+            >
+              <option value="">Select <%= attribute.name.titleize %></option>
+              {data.<%= attribute.name.pluralize %>?.map(<%= attribute.name.singularize %> => (
+                <option key={<%= attribute.name.singularize %>.id} value={<%= attribute.name.singularize %>.id}>
+                  {<%= attribute.name.singularize %>.name || <%= attribute.name.singularize %>.id}
+                </option>
+              ))}
+            </select>
 <% else -%>
             <input
-              type="<%= attribute.type == :datetime ? 'datetime-local' : attribute.type == :date ? 'date' : 'text' %>"
+              type="text"
               name="<%= attribute.name %>"
               id="<%= attribute.name %>"
               value={data.<%= singular_table_name %>.<%= attribute.name %>}
               onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
               className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
               placeholder="Type <%= singular_table_name %> <%= attribute.name %>"
-<% if attribute.type == :datetime || attribute.type == :date -%>
-              step="1"
-<% end -%>
             />
 <% end -%>
             {errors.<%= attribute.name %> && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{getErrorMessage('<%= attribute.name %>')}</p>}

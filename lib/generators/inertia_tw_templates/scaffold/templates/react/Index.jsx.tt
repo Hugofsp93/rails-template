@@ -7,6 +7,7 @@ import Table from '../../components/Table'
 import Pagination from '../../components/Pagination'
 import SearchBar from '../../components/SearchBar'
 import FilterDropdown from '../../components/FilterDropdown'
+import { formatDate, formatDateOnly, formatTime, formatNumber } from '../../utils/formatters'
 
 export default function Index({ props: { <%= plural_table_name %>, pagination } }) {
   const { toast } = useToast()
@@ -52,18 +53,24 @@ export default function Index({ props: { <%= plural_table_name %>, pagination } 
   }
 
   const columns = [
-<% attributes.reject(&:password_digest?).each do |attribute| -%>
+<% attributes.reject { |a| a.password_digest? || a.type == :text || a.type == :binary || a.reference? }.each do |attribute| -%>
     { 
       key: '<%= attribute.name %>', 
       label: '<%= attribute.name.titleize %>'
-<% if attribute.type == :datetime -%>
-      ,render: (<%= singular_table_name %>) => new Date(<%= singular_table_name %>.<%= attribute.name %>).toLocaleDateString()
-<% elsif attribute.type == :boolean -%>
+<% if attribute.type == :boolean -%>
       ,render: (<%= singular_table_name %>) => (
-        <span className={`px-2 py-1 rounded-full text-xs ${<%= singular_table_name %>.<%= attribute.name %> ? 'bg-green-200 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300'}`}>
+        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${<%= singular_table_name %>.<%= attribute.name %> ? 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' : 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300'}`}>
           {<%= singular_table_name %>.<%= attribute.name %> ? 'Active' : 'Inactive'}
         </span>
       )
+<% elsif attribute.type == :datetime -%>
+      ,render: (<%= singular_table_name %>) => formatDate(<%= singular_table_name %>.<%= attribute.name %>)
+<% elsif attribute.type == :date -%>
+      ,render: (<%= singular_table_name %>) => formatDateOnly(<%= singular_table_name %>.<%= attribute.name %>)
+<% elsif attribute.type == :time -%>
+      ,render: (<%= singular_table_name %>) => formatTime(<%= singular_table_name %>.<%= attribute.name %>)
+<% elsif [:integer, :bigint, :float, :decimal].include?(attribute.type) -%>
+      ,render: (<%= singular_table_name %>) => formatNumber(<%= singular_table_name %>.<%= attribute.name %>, '<%= attribute.type %>')
 <% end -%>
     },
 <% end -%>
