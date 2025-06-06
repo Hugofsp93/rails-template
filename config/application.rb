@@ -23,5 +23,21 @@ module RailsTemplate
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+
+    # Set RSpec as the default test framework
+    config.generators do |g|
+      g.test_framework :rspec,
+        fixtures: false,
+        view_specs: false,
+        helper_specs: false,
+        routing_specs: false,
+        controller_specs: true,
+        request_specs: true
+
+      g.stylesheets false
+      g.javascripts false
+      g.assets false
+      g.helper false
+    end
   end
 end

@@ -65,18 +65,18 @@ export default function ForgotPassword() {
                   id="email"
                   onChange={(e) => handleChange('email', e.target.value)}
                   className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                    errors.email ? 'border-utility-500 focus:ring-utility-500 focus:border-utility-500' : 'focus:ring-utility-500 focus:border-utility-500'
+                    errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
                   }`}
                   placeholder="name@company.com"
                 />
                 {errors.email && (
-                  <p className="mt-1 text-sm text-utility-600 dark:text-utility-500">{errors.email}</p>
+                  <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.email}</p>
                 )}
               </div>
               <button
                 type="submit"
                 disabled={processing}
-                className="w-full text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-utility-500 dark:hover:bg-utility-600 dark:focus:ring-utility-800">
+                className="w-full text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mb-2 text-center dark:bg-utility-600 dark:hover:bg-utility-500 dark:focus:ring-utility-800">
                 {processing ? 'Sending...' : 'Reset password'}
               </button>
               <Link href="/sign_in" className="w-full flex justify-center text-sm text-center text-neutral-500 dark:text-neutral-200">Return to login</Link>

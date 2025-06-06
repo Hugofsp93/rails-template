@@ -1,0 +1,175 @@
+import Toast from '../../components/Toast'
+import { useToast } from '../../hooks/useToast'
+import { Link } from '@inertiajs/react'
+
+export default function Form({ errors, data, processing, handleChange, handleSubmit }) {
+  const { toast } = useToast()
+
+  const getErrorClass = (fieldName) => {
+    return errors[fieldName] 
+      ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' 
+      : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
+  }
+
+  const getErrorMessage = (fieldName) => {
+    if (!errors[fieldName]) return null
+    // Remove duplicate messages if they exist
+    const message = errors[fieldName]
+    return Array.isArray(message) ? message[0] : message
+  }
+
+  return (
+    <>
+      { toast && <Toast {...toast} /> }
+      <form onSubmit={handleSubmit} noValidate>
+        <div className="grid gap-4 grid-cols-1 md:grid-cols-2 sm:gap-6">
+<% attributes.reject { |attr| attr.type == :text }.each do |attribute| -%>
+          <div className="h-[75px]">
+<% if attribute.type == :references -%>
+            <label htmlFor="<%= attribute.name %>_id" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %></label>
+<% else -%>
+            <label htmlFor="<%= attribute.name %>" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %></label>
+<% end -%>
+<% if attribute.type == :boolean -%>
+            <div className="flex items-center">
+              <input
+                id="<%= attribute.name %>"
+                name="<%= attribute.name %>"
+                type="checkbox"
+                checked={data.<%= singular_table_name %>.<%= attribute.name %>}
+                className={`w-4 h-4 bg-neutral-100 border-neutral-300 rounded text-utility-700 focus:ring-utility-700 dark:focus:ring-neutral-950 dark:focus:bg-neutral-800 dark:focus:border-neutral-800 dark:bg-neutral-800 dark:text-utility-600 dark:border-neutral-800 ${getErrorClass('<%= attribute.name %>')}`}
+                onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.checked)}
+              />
+              <label htmlFor="<%= attribute.name %>" className="ml-2 text-sm font-medium text-neutral-900 dark:text-neutral-300">
+                Active
+              </label>
+            </div>
+<% elsif attribute.type == :datetime -%>
+            <input
+              type="datetime-local"
+              min="1900-01-01T00:00"
+              max="2099-12-31T23:59"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Select date and time"
+              step="1"
+            />
+<% elsif attribute.type == :date -%>
+            <input
+              type="date"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Select date"
+            />
+<% elsif attribute.type == :time -%>
+            <input
+              type="time"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Select time"
+              step="1"
+            />
+<% elsif [:integer, :bigint].include?(attribute.type) -%>
+            <input
+              type="number"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Enter <%= attribute.name.titleize %>"
+              step="1"
+<% if attribute.type == :bigint -%>
+              min="-9223372036854775808"
+              max="9223372036854775807"
+<% else -%>
+              min="-2147483648"
+              max="2147483647"
+<% end -%>
+            />
+<% elsif [:float, :decimal].include?(attribute.type) -%>
+            <input
+              type="number"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Enter <%= attribute.name.titleize %>"
+              step="any"
+            />
+<% elsif attribute.type == :references -%>
+            <select
+              id="<%= attribute.name %>_id"
+              name="<%= attribute.name %>_id"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>_id}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>_id', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+            >
+              <option value="">Select <%= attribute.name.titleize %></option>
+              {data.<%= attribute.name.pluralize %>?.map(<%= attribute.name.singularize %> => (
+                <option key={<%= attribute.name.singularize %>.id} value={<%= attribute.name.singularize %>.id}>
+                  {<%= attribute.name.singularize %>.name || <%= attribute.name.singularize %>.id}
+                </option>
+              ))}
+            </select>
+<% else -%>
+            <input
+              type="text"
+              name="<%= attribute.name %>"
+              id="<%= attribute.name %>"
+              value={data.<%= singular_table_name %>.<%= attribute.name %>}
+              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+              placeholder="Type <%= singular_table_name %> <%= attribute.name %>"
+            />
+<% end -%>
+            {errors.<%= attribute.name %> && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{getErrorMessage('<%= attribute.name %>')}</p>}
+          </div>
+<% end -%>
+        </div>
+<% attributes.each do |attribute| -%>
+<% if attribute.type == :text -%>
+        <div className="w-full mt-6">
+          <label htmlFor="description" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %></label>
+          <textarea
+            id="<%= attribute.name %>"
+            name="<%= attribute.name %>"
+            value={data.<%= singular_table_name %>.<%= attribute.name %>}
+            onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+            className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
+            placeholder="Type <%= singular_table_name %> <%= attribute.name %>"
+            rows="4"
+          />
+          {errors.<%= attribute.name %> && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{getErrorMessage('<%= attribute.name %>')}</p>}
+        </div>
+<% end -%>
+<% end -%>
+
+        <button
+          type="submit"
+          disabled={processing}
+          className="inline-flex items-center px-8 py-2.5 mt-8 text-sm font-medium text-center text-neutral-50 bg-utility-700 rounded-lg focus:ring-neutral-200 dark:focus:ring-utility-500 hover:bg-utility-600 disabled:opacity-50 disabled:cursor-not-allowed"
+        >
+          {processing ? 'Saving...' : 'Save'}
+        </button>
+        <Link
+          href={"/<%= plural_table_name %>"}
+          type="button"
+          className="inline-flex items-center px-8 py-2.5 mt-8 text-sm font-medium text-center hover:underline text-utility-700 hover:color-utility-600 dark:text-neutral-200"
+        >
+          Back
+        </Link>
+      </form>
+    </>
+  )
+}

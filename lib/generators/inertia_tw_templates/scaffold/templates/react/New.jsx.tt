@@ -1,0 +1,66 @@
+import { Head, useForm, usePage } from '@inertiajs/react'
+import { useToast } from '../../hooks/useToast'
+import Toast from "../../components/Toast"
+import Form from './Form'
+import { formatValueForInput } from '../../utils/inputFormatters'
+
+export default function New() {
+  const { toast } = useToast()
+<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+  const { <%= attribute.name.pluralize %> } = usePage().props
+<% end -%>
+  const { data, setData, post, processing, errors } = useForm({
+    <%= singular_table_name %>: {
+<%- attributes.each do |attribute| -%>
+<% if [:datetime, :date, :time].include?(attribute.type) -%>
+      <%= attribute.name %>: formatValueForInput('', '<%= attribute.type %>'),
+<% else -%>
+      <%= attribute.name %>: '',
+<% end -%>
+<%- end -%>
+    },
+<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+    <%= attribute.name.pluralize %>: <%= attribute.name.pluralize %> || [],
+<% end -%>
+  })
+
+  const handleChange = (field, value) => {
+    setData(prev => ({
+      ...prev,
+      <%= singular_table_name %>: {
+        ...prev.<%= singular_table_name %>,
+        [field.split('.')[1]]: value
+      },
+<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+      <%= attribute.name.pluralize %>: prev.<%= attribute.name.pluralize %>,
+<% end -%>
+    }))
+  }
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    post('/<%= plural_table_name %>', {
+      preserveScroll: true
+    })
+  }
+
+  return (
+    <>
+      <Head title="New <%= singular_table_name.titleize %>" />
+      {toast && <Toast {...toast} />}
+      <section className="w-full">
+        <div className="bg-neutral-50 dark:bg-neutral-950 border border-neutral-300 dark:border-neutral-700 rounded-xl py-8 px-8 mx-auto max-w-4xl">
+          <h2 className="mb-4 text-xl font-bold text-neutral-900 dark:text-neutral-50">Add new <%= singular_table_name.titleize %></h2>
+          <Form 
+            errors={errors}
+            data={data}
+            processing={processing}
+            handleChange={handleChange}
+            handleSubmit={handleSubmit}
+            isEdit={false}
+          />
+        </div>
+      </section>
+    </>
+  )
+}

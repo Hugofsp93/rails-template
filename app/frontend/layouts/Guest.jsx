@@ -8,7 +8,7 @@ export default function Guest({ children }) {
     <>
       <Head title="Guest" />
       {/* more navbar examples: https://flowbite.com/docs/components/navbar/ */}
-      <nav className="bg-neutral-50 dark:bg-neutral-950 sticky w-full z-20 top-0 start-0 border-b border-neutral-200 dark:border-neutral-700">
+      <nav className="bg-neutral-50 dark:bg-neutral-950 sticky w-full z-20 top-0 start-0 border-b-3 border-utility-600 dark:border-utility-500">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
             <RubyLogo className="h-10" />
@@ -16,7 +16,7 @@ export default function Guest({ children }) {
           </a>
           <div className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse">
             <ThemeToggle />
-            <Link href="/sign_in" method="get" as="button" className="text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-utility-500 dark:hover:bg-utility-600 dark:focus:ring-utility-800">
+            <Link href="/sign_in" method="get" as="button" className="text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:ring-2 focus:outline-none focus:ring-utility-300 font-medium rounded-lg text-sm px-4 py-2 text-center dark:bg-utility-600 dark:hover:bg-utility-500 dark:focus:ring-utility-800">
               Login
             </Link>
             <button data-collapse-toggle="navbar-cta" type="button" data-turbo="false" className="inline-flex items-center p-2 w-10 h-10 justify-center text-sm text-neutral-500 rounded-lg md:hidden hover:bg-neutral-100 focus:outline-none focus:ring-2 focus:ring-neutral-200 dark:text-neutral-400 dark:hover:bg-neutral-700 dark:focus:ring-neutral-600" aria-controls="navbar-cta" aria-expanded="false">

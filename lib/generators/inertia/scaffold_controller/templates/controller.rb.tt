@@ -1,0 +1,134 @@
+class <%= controller_class_name %>Controller < ApplicationController
+  before_action :set_<%= singular_table_name %>, only: %i[ show edit update destroy ]
+  before_action :authenticate_user!
+  before_action :authorize_<%= singular_table_name %>!, only: %i[ edit update destroy ]
+
+  # GET <%= route_url %>
+  def index
+    @<%= plural_table_name %> = <%= class_name %>.all
+
+    # Search functionality
+    if params[:search].present?
+      @<%= plural_table_name %> = @<%= plural_table_name %>.where(
+        "<%= attributes.select { |attr| [:string, :text].include?(attr.type) }.map { |attr| "#{attr.name} ILIKE :search" }.join(" OR ") %>",
+        search: "%#{params[:search]}%"
+      )
+    end
+
+    # Filter by status
+    if params[:status].present?
+      @<%= plural_table_name %> = @<%= plural_table_name %>.where(status: params[:status])
+    end
+
+    # Pagination with Pagy (use limit: 5 if want that pagination be custom)
+    @pagy, @<%= plural_table_name %> = pagy(@<%= plural_table_name %>)
+
+    render inertia: "<%= class_name %>/Index", props: {
+      <%= plural_table_name %>: @<%= plural_table_name %>.map { |<%= singular_table_name %>| serialize_<%= singular_table_name %>(<%= singular_table_name %>) },
+      pagination: {
+        currentPage: @pagy.page,
+        totalPages: @pagy.pages,
+        totalItems: @pagy.count,
+        perPage: @pagy.limit
+      }
+    }
+  end
+
+  # GET <%= route_url %>/1
+  def show
+    render inertia: "<%= class_name %>/Show", props: {
+      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "      #{attribute.name.singularize}: serialize_#{attribute.name.singularize}(@#{singular_table_name}.#{attribute.name.singularize})" }.join(",\n") %>
+    }
+  end
+
+  # GET <%= route_url %>/new
+  def new
+    @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
+    render inertia: "<%= class_name %>/New", props: {
+      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "      #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
+    }
+  end
+
+  # GET <%= route_url %>/1/edit
+  def edit
+    render inertia: "<%= class_name %>/Edit", props: {
+      <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "      #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
+    }
+  end
+
+  # POST <%= route_url %>
+  def create
+    @<%= singular_table_name %> = <%= orm_class.build(class_name, "#{singular_table_name}_params") %>
+
+    if @<%= singular_table_name %>.save
+      redirect_to <%= singular_table_name %>_url(@<%= singular_table_name %>), notice: "<%= human_name %> was successfully created."
+    else
+      redirect_to new_<%= singular_table_name %>_url, inertia: {
+        errors: @<%= singular_table_name %>.errors,
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "        #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
+      }
+    end
+  end
+
+  # PATCH/PUT <%= route_url %>/1
+  def update
+    if @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
+      redirect_to <%= singular_table_name %>_url(@<%= singular_table_name %>), notice: "<%= human_name %> was successfully updated."
+    else
+      redirect_to edit_<%= singular_table_name %>_url(@<%= singular_table_name %>), inertia: {
+        errors: @<%= singular_table_name %>.errors,
+<% references = attributes.select { |attr| attr.type == :references } -%>
+<%= references.map { |attribute| "        #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
+      }
+    end
+  end
+
+  # DELETE <%= route_url %>/1
+  def destroy
+    @<%= singular_table_name %>.destroy!
+    redirect_to <%= index_helper %>_url, notice: "<%= human_name %> was successfully destroyed."
+  end
+
+  private
+    # Use callbacks to share common setup or constraints between actions.
+    def set_<%= singular_table_name %>
+      @<%= singular_table_name %> = <%= orm_class.find(class_name, "params[:id]") %>
+    end
+
+    # Only allow a list of trusted parameters through.
+    def <%= "#{singular_table_name}_params" %>
+      <%- if attributes_names.empty? -%>
+      params.fetch(:<%= singular_table_name %>, {})
+      <%- else -%>
+      params.require(:<%= singular_table_name %>).permit(<%= permitted_params %>)
+      <%- end -%>
+    end
+
+    def serialize_<%= singular_table_name %>(<%= singular_table_name %>)
+      <%= singular_table_name %>.as_json(only: [
+        :id,
+        <%= attributes_names.map { |name| ":#{name}" }.join(",\n        ") %>,
+        :created_at,
+        :updated_at
+      ])
+    end
+
+<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+    def serialize_<%= attribute.name.singularize %>(<%= attribute.name.singularize %>)
+      <%= attribute.name.singularize %>.as_json
+    end
+<% end -%>
+
+    def authorize_<%= singular_table_name %>!
+      unless current_user.id == 2 || current_user == @<%= singular_table_name %> # current_user.admin?
+        redirect_to <%= index_helper %>_url, alert: "You are not authorized to perform this action."
+      end
+    end
+end

@@ -11,14 +11,20 @@ export default function App({ children }) {
 
   useEffect(() => {
     console.log('Logged in:', currentUser)
-    initFlowbite()
+    initFlowbite({
+      tabs: {
+        defaultTabId: 'stats-tab',
+        activeClasses: 'text-utility-600 dark:text-utility-500 border-utility-600 dark:border-utility-500',
+        inactiveClasses: 'text-neutral-500 dark:text-neutral-400'
+      }
+    })
   }, [])
 
   return (
     <>
       <Head title="App" />
       {/* more navbar examples: https://flowbite.com/docs/components/navbar/ */}
-      <nav className="bg-neutral-50 dark:bg-neutral-950 sticky w-full z-20 top-0 start-0 border-b border-neutral-200 dark:border-neutral-700">
+      <nav className="bg-neutral-50 dark:bg-neutral-950 sticky w-full z-20 top-0 start-0 border-b-3 border-utility-600 dark:border-utility-500">
         <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
           <a href="/" className="flex items-center space-x-3 rtl:space-x-reverse">
             <RubyLogo className="h-10" />
@@ -32,7 +38,7 @@ export default function App({ children }) {
             </button>
             <div className="z-50 hidden my-4 text-base list-none bg-neutral-50 divide-y divide-neutral-100 rounded-lg shadow-sm dark:bg-neutral-700 dark:divide-neutral-600" id="user-dropdown">
               <div className="px-4 py-3">
-                <span className="block text-sm text-neutral-900 dark:text-neutral-50">Bonnie Green</span>
+                <span className="block text-sm text-neutral-900 dark:text-neutral-50">{currentUser.name}</span>
                 <span className="block text-sm  text-neutral-500 truncate dark:text-neutral-400">{currentUser.email}</span>
               </div>
               <ul className="py-2" aria-labelledby="user-menu-button">
@@ -70,7 +76,7 @@ export default function App({ children }) {
                 <a href="/" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Home</a>
               </li>
               <li>
-                <a href="#" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">About</a>
+                <a href="/users" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Users</a>
               </li>
               <li>
                 <a href="#" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Services</a>
