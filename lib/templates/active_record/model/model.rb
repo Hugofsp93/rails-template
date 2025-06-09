@@ -23,6 +23,9 @@ class <%= class_name %> < <%= parent_class_name.classify %>
 <% attributes.select { |attr| [:integer, :float, :decimal].include?(attr.type) }.each do |attribute| -%>
   validates :<%= attribute.name %>, numericality: true, allow_nil: true
 <% end -%>
+<% attributes.select { |attr| [:date, :datetime].include?(attr.type) }.each do |attribute| -%>
+  validates :<%= attribute.name %>, date_range: { min: Date.new(1700, 1, 1), max: Date.new(2200, 12, 31) }, allow_nil: true
+<% end -%>
 <% if attributes.any? { |attr| attr.name == "phone" } -%>
   validates :phone, presence: true, uniqueness: true, format: {
     with: /\A\+?[1-9]\d{1,14}\z/,

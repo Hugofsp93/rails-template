@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
   attr_accessor :admin_creation
 
+  has_many :nades, dependent: :destroy
+
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :phone, presence: true, uniqueness: true, format: {
     with: /\A\+?[1-9]\d{1,14}\z/,

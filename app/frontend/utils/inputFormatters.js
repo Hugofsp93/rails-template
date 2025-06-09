@@ -18,15 +18,20 @@ export const formatDateTimeForInput = (dateString) => {
 export const formatDateForInput = (dateString) => {
   if (!dateString) return ''
   
-  // If the date string is in YYYY-MM-DD format, return it as is
+  // If the date string is in YYYY-MM-DD format, limit year to 4 digits
   if (/^\d{4,}-\d{2}-\d{2}$/.test(dateString)) {
-    return dateString
+    const [year, month, day] = dateString.split('-')
+    // Limit year to 4 digits
+    const limitedYear = year.substring(0, 4)
+    return `${limitedYear}-${month}-${day}`
   }
   
-  // If the date string is in DD/MM/YYYY format, convert it
+  // If the date string is in DD/MM/YYYY format, convert it and limit year to 4 digits
   if (/^\d{1,2}\/\d{1,2}\/\d{4,}$/.test(dateString)) {
     const [day, month, year] = dateString.split('/')
-    return `${year}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
+    // Limit year to 4 digits
+    const limitedYear = year.substring(0, 4)
+    return `${limitedYear}-${month.padStart(2, '0')}-${day.padStart(2, '0')}`
   }
   
   // For dates within JavaScript's valid range, use Date object

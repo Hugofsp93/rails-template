@@ -74,7 +74,7 @@ class UsersController < ApplicationController
   # PATCH/PUT /admin/users/1
   def update
     # Don't require current password for admin updates
-    if current_user.id == 2 # current_user.admin? (in the future, when implementing rolify)
+    if current_user.id == 1 # current_user.admin? (in the future, when implementing rolify)
       # Remove password fields if they're blank
       if user_params[:password].blank?
         params[:user].delete(:password)
@@ -142,7 +142,7 @@ class UsersController < ApplicationController
 
     # TODO:
     def authorize_user!
-      unless current_user.id == 2 || current_user == @user # current_user.admin? (no futuro, quando implementar o rolify)
+      unless current_user.id == 1 || current_user == @user # current_user.admin? (no futuro, quando implementar o rolify)
         redirect_to users_url, alert: "You are not authorized to perform this action."
       end
     end

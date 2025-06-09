@@ -1,4 +1,5 @@
 import { Head, Link } from '@inertiajs/react'
+import { formatDate } from '../../utils/formatters'
 
 export default function Show({ props: { user } }) {
 
@@ -30,11 +31,11 @@ export default function Show({ props: { user } }) {
           <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">
             <div className="w-1/2">
               <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Created at</label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.created_at}</div>
+              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{formatDate(user.created_at)}</div>
             </div>
             <div className="w-1/2">
               <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Updated at</label>
-              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.updated_at}</div>
+              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{formatDate(user.updated_at)}</div>
             </div>
           </dl>
           <div className="flex items-center">

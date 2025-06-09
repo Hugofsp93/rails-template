@@ -127,7 +127,7 @@ class <%= controller_class_name %>Controller < ApplicationController
 <% end -%>
 
     def authorize_<%= singular_table_name %>!
-      unless current_user.id == 2 || current_user == @<%= singular_table_name %> # current_user.admin?
+      unless current_user.id == 1 || current_user == @<%= singular_table_name %> # current_user.admin?
         redirect_to <%= index_helper %>_url, alert: "You are not authorized to perform this action."
       end
     end
