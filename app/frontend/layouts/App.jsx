@@ -70,7 +70,7 @@ export default function App({ children }) {
               </svg>
             </button>
           </div>
-          <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
+          {/* <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1" id="navbar-user">
             <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-neutral-100 rounded-lg bg-neutral-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 dark:bg-neutral-950 dark:border-neutral-800">
               <li>
                 <a href="/" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Home</a>
@@ -88,7 +88,7 @@ export default function App({ children }) {
                 <a href="/contact" className="block py-2 px-3 text-neutral-900 rounded-sm hover:bg-transparent hover:text-utility-700 md:p-0 dark:text-neutral-50 dark:hover:text-utility-400">Contact</a>
               </li>
             </ul>
-          </div>
+          </div> */}
         </div>
       </nav>
 

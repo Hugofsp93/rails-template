@@ -1,16 +1,17 @@
 import { Head, useForm } from "@inertiajs/react"
 import Toast from '../../components/Toast'
 import { useToast } from '../../hooks/useToast'
-import { useState } from 'react'
+import { useFormValidation } from '../../hooks/useFormValidation'
+import { required } from '../../utils/validationRules'
+import { password } from '../../utils/userValidationRules'
 
 export default function ResetPassword() {
   const { toast } = useToast()
-  const [errors, setErrors] = useState({})
   const params = new URLSearchParams(window.location.search)
   const token = params.get('reset_password_token')
   const email = params.get('email')
 
-  const { data, setData, put, processing } = useForm({
+  const { data, setData, put, processing, errors } = useForm({
     user: {
       reset_password_token: token,
       email: email,
@@ -19,23 +20,30 @@ export default function ResetPassword() {
     }
   })
 
-  const validateForm = () => {
-    const newErrors = {}
-
-    if (!data.user.password) {
-      newErrors.password = 'Password is required'
-    } else if (data.user.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
+  // Define validation rules
+  const validationRules = {
+    password: (value) => {
+      const requiredResult = required(value, 'Password')
+      if (requiredResult !== true) return requiredResult
+      return password(value) // Include length validation for password reset
+    },
+    password_confirmation: (value) => {
+      const requiredResult = required(value, 'Password confirmation')
+      if (requiredResult !== true) return requiredResult
+      if (value !== data.user.password) {
+        return 'Password confirmation does not match'
+      }
+      return true
     }
+  }
 
-    if (!data.user.password_confirmation) {
-      newErrors.password_confirmation = 'Password confirmation is required'
-    } else if (data.user.password_confirmation !== data.user.password) {
-      newErrors.password_confirmation = 'Password confirmation does not match'
-    }
+  // Initialize validation hook
+  const { errors: validationErrors, validateField, clearFieldError } = useFormValidation(validationRules, errors)
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+  const getErrorClass = (fieldName) => {
+    return validationErrors[fieldName] 
+      ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' 
+      : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
   }
 
   const handleChange = (field, value) => {
@@ -44,17 +52,16 @@ export default function ResetPassword() {
       [field]: value
     })
 
-    // clean error when user change the field
-    setErrors(prev => ({ ...prev, [field]: '', base: '' }))
+    // Clear error when user edits the field
+    clearFieldError(field)
+  }
+
+  const handleFieldBlur = (field, value) => {
+    validateField(field, value)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
-
     put('/users/password')
   }
 
@@ -75,44 +82,43 @@ export default function ResetPassword() {
                   type="email"
                   name="email"
                   id="email"
-                  className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                    errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
-                  }`}
+                  value={data.user.email}
+                  className="bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500"
                   placeholder={email}
                   disabled
                   required
                 />
               </div>
               <div className="h-[75px]">
-                <label htmlFor="password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">New Password</label>
+                <label htmlFor="password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">New Password<span className="text-red-500">*</span></label>
                 <input 
                   type="password" 
                   name="password" 
                   id="password" 
-                  onChange={(e) => handleChange('password', e.target.value)} 
+                  value={data.user.password}
+                  onChange={(e) => handleChange('password', e.target.value)}
+                  onBlur={(e) => handleFieldBlur('password', e.target.value)}
                   placeholder="••••••••" 
-                  className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                    errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
-                  }`}
+                  className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('password')}`}
                 />
-                {errors.password && (
-                  <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.password}</p>
+                {validationErrors.password && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-500">{validationErrors.password}</p>
                 )}
               </div>
               <div className="h-[75px]">
-                <label htmlFor="password_confirmation" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Confirm password</label>
+                <label htmlFor="password_confirmation" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Confirm password<span className="text-red-500">*</span></label>
                 <input 
                   type="password" 
                   name="password_confirmation"
                   id="password_confirmation" 
-                  onChange={(e) => handleChange('password_confirmation', e.target.value)} 
+                  value={data.user.password_confirmation}
+                  onChange={(e) => handleChange('password_confirmation', e.target.value)}
+                  onBlur={(e) => handleFieldBlur('password_confirmation', e.target.value)}
                   placeholder="••••••••" 
-                  className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                    errors.password_confirmation ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
-                  }`}
+                  className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('password_confirmation')}`}
                 />
-                {errors.password_confirmation && (
-                  <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.password_confirmation}</p>
+                {validationErrors.password_confirmation && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-500">{validationErrors.password_confirmation}</p>
                 )}
               </div>
               <button

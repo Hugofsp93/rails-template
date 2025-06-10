@@ -1,28 +1,34 @@
 import { Head, useForm, Link } from "@inertiajs/react"
 import Toast from '../../components/Toast'
 import { useToast } from '../../hooks/useToast'
-import { useState } from 'react'
+import { useFormValidation } from '../../hooks/useFormValidation'
+import { required } from '../../utils/validationRules'
+import { email } from '../../utils/userValidationRules'
 
 export default function ForgotPassword() {
   const { toast } = useToast()
-  const [errors, setErrors] = useState({})
-  const { data, setData, post, processing } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
     user: {
       email: '',
     }
   })
 
-  const validateForm = () => {
-    const newErrors = {}
-
-    if (!data.user.email) {
-      newErrors.email = 'E-mail is required'
-    } else if (!/\S+@\S+\.\S+/.test(data.user.email)) {
-      newErrors.email = 'E-mail is invalid'
+  // Define validation rules
+  const validationRules = {
+    email: (value) => {
+      const requiredResult = required(value, 'Email')
+      if (requiredResult !== true) return requiredResult
+      return email(value)
     }
+  }
 
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+  // Initialize validation hook
+  const { errors: validationErrors, validateField, clearFieldError } = useFormValidation(validationRules, errors)
+
+  const getErrorClass = (fieldName) => {
+    return validationErrors[fieldName] 
+      ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' 
+      : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
   }
   
   const handleChange = (field, value) => {
@@ -31,17 +37,16 @@ export default function ForgotPassword() {
       [field]: value
     })
 
-    // clean error when user change the field
-    setErrors(prev => ({ ...prev, [field]: '', base: '' }))
+    // Clear error when user edits the field
+    clearFieldError(field)
+  }
+
+  const handleFieldBlur = (field, value) => {
+    validateField(field, value)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    if (!validateForm()) {
-      return
-    }
-
     post('/users/password')
   }
 
@@ -58,19 +63,19 @@ export default function ForgotPassword() {
             <p className="font-light text-neutral-500 dark:text-neutral-400">Don't fret! Just type in your email and we will send you a code to reset your password!</p>
             <form className="mt-4 space-y-4 lg:mt-5 md:space-y-5" onSubmit={handleSubmit} noValidate>
               <div className="h-[90px]">
-                <label htmlFor="email" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your email</label>
+                <label htmlFor="email" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your email<span className="text-red-500">*</span></label>
                 <input
                   type="email"
                   name="email"
                   id="email"
+                  value={data.user.email}
                   onChange={(e) => handleChange('email', e.target.value)}
-                  className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                    errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
-                  }`}
+                  onBlur={(e) => handleFieldBlur('email', e.target.value)}
+                  className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('email')}`}
                   placeholder="name@company.com"
                 />
-                {errors.email && (
-                  <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.email}</p>
+                {validationErrors.email && (
+                  <p className="mt-1 text-sm text-red-600 dark:text-red-500">{validationErrors.email}</p>
                 )}
               </div>
               <button

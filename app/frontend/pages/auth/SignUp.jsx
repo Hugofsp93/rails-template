@@ -1,12 +1,14 @@
 import { Head, useForm } from "@inertiajs/react"
 import Toast from '../../components/Toast'
 import { useToast } from '../../hooks/useToast'
-import { useState } from 'react'
+import { useFormValidation } from '../../hooks/useFormValidation'
+import { required } from '../../utils/validationRules'
+import { email, password, passwordConfirmation } from '../../utils/userValidationRules'
+import { every } from 'lodash'
 
 export default function SignUp() {
   const { toast } = useToast()
-  const [errors, setErrors] = useState({})
-  const { data, setData, post, processing } = useForm({
+  const { data, setData, post, processing, errors } = useForm({
     user: {
       name: '',
       email: '',
@@ -16,37 +18,27 @@ export default function SignUp() {
     }
   })
 
-  const validateForm = () => {
-    const newErrors = {}
-
-    if (!data.user.name) {
-      newErrors.name = 'Name is required'
+  // Define validation rules using user-specific validations
+  const validationRules = {
+    name: (value) => required(value),
+    email: (value) => email(value),
+    password: (value) => password(value),
+    password_confirmation: (value) => passwordConfirmation(value, data.user.password),
+    terms: (value) => {
+      if (!value) {
+        return 'You must accept the terms and conditions'
+      }
+      return true
     }
+  }
 
-    if (!data.user.email) {
-      newErrors.email = 'E-mail is required'
-    } else if (!/\S+@\S+\.\S+/.test(data.user.email)) {
-      newErrors.email = 'E-mail is invalid'
-    }
+  // Initialize validation hook
+  const { errors: validationErrors, validateField, clearFieldError } = useFormValidation(validationRules, errors)
 
-    if (!data.user.password) {
-      newErrors.password = 'Password is required'
-    } else if (data.user.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters'
-    }
-
-    if (!data.user.password_confirmation) {
-      newErrors.password_confirmation = 'Password confirmation is required'
-    } else if (data.user.password_confirmation !== data.user.password) {
-      newErrors.password_confirmation = 'Password confirmation does not match'
-    }
-
-    if (!data.user.terms) {
-      newErrors.terms = 'You must accept the terms and conditions'
-    }
-
-    setErrors(newErrors)
-    return Object.keys(newErrors).length === 0
+  const getErrorClass = (fieldName) => {
+    return validationErrors[fieldName] 
+      ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' 
+      : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
   }
   
   const handleChange = (field, value) => {
@@ -55,18 +47,34 @@ export default function SignUp() {
       [field]: value
     })
 
-    // clean error when user change the field
-    setErrors(prev => ({ ...prev, [field]: '', base: '' }))
+    // Clear error when user edits the field
+    clearFieldError(field)
+  }
+
+  const handleFieldBlur = (field, value) => {
+    validateField(field, value)
   }
 
   const handleSubmit = (e) => {
     e.preventDefault()
-
-    if (!validateForm()) {
-      return
+    
+    // Validate all fields using lodash every
+    const allFieldsValid = every(validationRules, (rule, field) => {
+      const value = data.user[field]
+      const result = rule(value)
+      
+      // If validation fails, trigger the validation to show error
+      if (result !== true) {
+        validateField(field, value)
+      }
+      
+      return result === true
+    })
+    
+    // Only submit if all validations pass
+    if (allFieldsValid) {
+      post('/users')
     }
-
-    post('/users')
   }
 
   return (
@@ -82,69 +90,69 @@ export default function SignUp() {
               </h1>
               <form className="space-y-4 md:space-y-6" onSubmit={handleSubmit} noValidate>
                 <div className="h-[75px]">
-                  <label htmlFor="name" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Name</label>
+                  <label htmlFor="name" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your name<span className="text-red-500">*</span></label>
                   <input
                     name="name"
                     id="name"
-                    type="name"
-                    placeholder="Your name"
+                    type="text"
+                    placeholder="John Doe"
+                    value={data.user.name}
                     onChange={(e) => handleChange('name', e.target.value)}
-                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                      errors.name ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
-                    }`}
+                    onBlur={(e) => handleFieldBlur('name', e.target.value)}
+                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('name')}`}
                     required
                   />
-                  {errors.name && (
-                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.name}</p>
+                  {validationErrors.name && (
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{validationErrors.name}</p>
                   )}
                 </div>
                 <div className="h-[75px]">
-                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your email</label>
+                  <label htmlFor="email" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your email<span className="text-red-500">*</span></label>
                   <input
                     name="email"
                     id="email"
                     type="email"
-                    placeholder="name@email.com"
+                    placeholder="name@company.com"
+                    value={data.user.email}
                     onChange={(e) => handleChange('email', e.target.value)}
-                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                      errors.email ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
-                    }`}
+                    onBlur={(e) => handleFieldBlur('email', e.target.value)}
+                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('email')}`}
                     required
                   />
-                  {errors.email && (
-                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.email}</p>
+                  {validationErrors.email && (
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{validationErrors.email}</p>
                   )}
                 </div>
                 <div className="h-[75px]">
-                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Password</label>
+                  <label htmlFor="password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Your password<span className="text-red-500">*</span></label>
                   <input
                     type="password"
                     name="password"
                     id="password"
                     placeholder="••••••••"
+                    value={data.user.password}
                     onChange={(e) => handleChange('password', e.target.value)}
-                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                      errors.password ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
-                    }`}
+                    onBlur={(e) => handleFieldBlur('password', e.target.value)}
+                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('password')}`}
                   />
-                  {errors.password && (
-                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.password}</p>
+                  {validationErrors.password && (
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{validationErrors.password}</p>
                   )}
                 </div>
                 <div className="h-[75px]">
-                  <label htmlFor="confirm-password" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Confirm password</label>
+                  <label htmlFor="password_confirmation" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">Confirm password<span className="text-red-500">*</span></label>
                   <input
                     type="password"
-                    name="confirm-password"
-                    id="confirm-password"
+                    name="password_confirmation"
+                    id="password_confirmation"
                     placeholder="••••••••"
+                    value={data.user.password_confirmation}
                     onChange={(e) => handleChange('password_confirmation', e.target.value)}
-                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${
-                      errors.password_confirmation ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
-                    }`}
+                    onBlur={(e) => handleFieldBlur('password_confirmation', e.target.value)}
+                    className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('password_confirmation')}`}
                   />
-                  {errors.password_confirmation && (
-                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.password_confirmation}</p>
+                  {validationErrors.password_confirmation && (
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{validationErrors.password_confirmation}</p>
                   )}
                 </div>
                 <div className="h-[40px] mt-10">
@@ -156,22 +164,23 @@ export default function SignUp() {
                         type="checkbox"
                         checked={data.user.terms}
                         onChange={(e) => handleChange('terms', e.target.checked)}
+                        onBlur={(e) => handleFieldBlur('terms', e.target.checked)}
                         className="w-4 h-4 bg-neutral-100 border-neutral-300 rounded text-utility-700 focus:ring-utility-700 dark:focus:ring-neutral-950 dark:focus:bg-neutral-800 dark:focus:border-neutral-800 dark:bg-neutral-800 dark:text-utility-600 dark:border-neutral-800"
                       />
                     </div>
                     <div className="ml-3 text-sm">
-                      <label htmlFor="terms" className="font-light text-neutral-500 dark:text-neutral-300">I accept the <a data-modal-target="static-modal" data-modal-toggle="static-modal" type="button" className="font-medium text-utility-700 dark:text-utility-400">Terms and Conditions</a></label>
+                      <label htmlFor="terms" className="font-light text-neutral-500 dark:text-neutral-300">I agree to the <a href="#" data-modal-target="static-modal" data-modal-toggle="static-modal" className="font-medium text-utility-700 dark:text-utility-400">Terms and Conditions</a><span className="text-red-500">*</span></label>
                     </div>
                   </div>
-                  {errors.terms && (
-                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{errors.terms}</p>
+                  {validationErrors.terms && (
+                    <p className="mt-1 text-xs text-red-600 dark:text-red-500">{validationErrors.terms}</p>
                   )}
                 </div>
                 <button
                   type="submit"
                   disabled={processing}
                   className="w-full text-neutral-50 bg-utility-700 hover:bg-utility-800 focus:outline-none font-medium rounded-lg text-sm px-5 py-2.5 mb-2 text-center dark:bg-utility-600 dark:hover:bg-utility-500 dark:focus:ring-utility-800">
-                  {processing ? 'Signing up...' : 'Create an account'}
+                  {processing ? 'Creating account...' : 'Create account'}
                   </button>
                 <p className="text-sm text-center font-light text-neutral-500 dark:text-neutral-400">
                   Already have an account? <a href="/sign_in" className="font-medium text-neutral-800 hover:underline dark:text-neutral-200">Login here</a>

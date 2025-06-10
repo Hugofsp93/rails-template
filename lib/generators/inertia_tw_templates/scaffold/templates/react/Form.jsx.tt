@@ -1,35 +1,153 @@
 import Toast from '../../components/Toast'
 import { useToast } from '../../hooks/useToast'
-import { Link } from '@inertiajs/react'
+import { Link, Head } from '@inertiajs/react'
 import { formatDateForInput } from '../../utils/inputFormatters'
+import { useFormValidation } from '../../hooks/useFormValidation'
+import { required, minLength, number, minValue, maxValue, date, datetime, time } from '../../utils/validationRules'
+import { every } from 'lodash'
 
-export default function Form({ errors, data, processing, handleChange, handleSubmit }) {
+export default function Form({ errors, data, processing, handleChange, handleSubmit, <%= singular_table_name %> }) {
   const { toast } = useToast()
 
+  // Define validation rules
+  const validationRules = {
+<% attributes.each do |attribute| -%>
+<% if attribute.required? -%>
+<% if attribute.type == :references -%>
+    <%= attribute.name %>_id: (value) => {
+<% else -%>
+    <%= attribute.name %>: (value) => {
+<% end -%>
+<% if attribute.type == :string || attribute.type == :text -%>
+      const requiredResult = required(value, '<%= attribute.human_name %>')
+      if (requiredResult !== true) return requiredResult
+      return true
+<% elsif attribute.type == :integer -%>
+      const requiredResult = required(value, '<%= attribute.human_name %>')
+      if (requiredResult !== true) return requiredResult
+      const numberResult = number(value, '<%= attribute.human_name %>')
+      if (numberResult !== true) return numberResult
+<% if attribute.name == 'year' -%>
+      const minResult = minValue(value, 1900, '<%= attribute.human_name %>')
+      if (minResult !== true) return minResult
+      const maxResult = maxValue(value, 2100, '<%= attribute.human_name %>')
+      if (maxResult !== true) return maxResult
+<% end -%>
+      return true
+<% elsif attribute.type == :date -%>
+      const requiredResult = required(value, '<%= attribute.human_name %>')
+      if (requiredResult !== true) return requiredResult
+      return date(value, '<%= attribute.human_name %>')
+<% elsif attribute.type == :datetime -%>
+      const requiredResult = required(value, '<%= attribute.human_name %>')
+      if (requiredResult !== true) return requiredResult
+      return datetime(value, '<%= attribute.human_name %>')
+<% elsif attribute.type == :time -%>
+      const requiredResult = required(value, '<%= attribute.human_name %>')
+      if (requiredResult !== true) return requiredResult
+      return time(value, '<%= attribute.human_name %>')
+<% else -%>
+      const requiredResult = required(value, '<%= attribute.human_name %>')
+      if (requiredResult !== true) return requiredResult
+      return true
+<% end -%>
+    },
+<% else -%>
+    <%= attribute.name %>: (value) => {
+<% if attribute.type == :integer -%>
+      if (!value) return true // Skip if empty
+      const numberResult = number(value, '<%= attribute.human_name %>')
+      if (numberResult !== true) return numberResult
+      return true
+<% elsif attribute.type == :date -%>
+      if (!value) return true // Skip if empty
+      return date(value, '<%= attribute.human_name %>')
+<% elsif attribute.type == :datetime -%>
+      if (!value) return true // Skip if empty
+      return datetime(value, '<%= attribute.human_name %>')
+<% elsif attribute.type == :time -%>
+      if (!value) return true // Skip if empty
+      return time(value, '<%= attribute.human_name %>')
+<% elsif attribute.type == :string || attribute.type == :text -%>
+      const requiredResult = required(value, '<%= attribute.human_name %>')
+      if (requiredResult !== true) return requiredResult
+      return true
+<% else -%>
+      return true // Optional field
+<% end -%>
+    },
+<% end -%>
+<% end -%>
+  }
+
+  // Initialize validation hook
+  const { errors: validationErrors, validateField, clearFieldError } = useFormValidation(validationRules, errors)
+
   const getErrorClass = (fieldName) => {
-    return errors[fieldName] 
+    return validationErrors[fieldName] 
       ? 'border-red-500 focus:ring-red-500 focus:border-red-500 dark:border-red-500' 
       : 'focus:ring-neutral-300 focus:border-neutral-300 dark:focus:ring-neutral-500 dark:focus:border-neutral-500'
   }
 
   const getErrorMessage = (fieldName) => {
-    if (!errors[fieldName]) return null
+    if (!validationErrors[fieldName]) return null
     // Remove duplicate messages if they exist
-    const message = errors[fieldName]
+    const message = validationErrors[fieldName]
     return Array.isArray(message) ? message[0] : message
+  }
+
+  // Enhanced handleChange with real-time validation
+  const handleFieldChange = (field, value) => {
+    handleChange(field, value)
+    
+    // Clear error when user edits the field
+    const fieldName = field.split('.')[1]
+    clearFieldError(fieldName)
+  }
+
+  // Handle field blur for validation
+  const handleFieldBlur = (field, value) => {
+    const fieldName = field.split('.')[1]
+    validateField(fieldName, value)
+  }
+
+  const handleSubmitForm = (e) => {
+    e.preventDefault()
+    
+    // Validate all fields using lodash every
+    const allFieldsValid = every(validationRules, (rule, field) => {
+      const value = data.<%= singular_table_name %>[field]
+      const result = rule(value)
+      
+      // If validation fails, trigger the validation to show error
+      if (result !== true) {
+        validateField(field, value)
+      }
+      
+      return result === true
+    })
+    
+    // Only submit if all validations pass
+    if (allFieldsValid) {
+      handleSubmit(e)
+    }
   }
 
   return (
     <>
       { toast && <Toast {...toast} /> }
-      <form onSubmit={handleSubmit} noValidate>
+      <form onSubmit={handleSubmitForm} noValidate>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 sm:gap-6">
 <% attributes.reject { |attr| attr.type == :text }.each do |attribute| -%>
           <div className="h-[75px]">
 <% if attribute.type == :references -%>
-            <label htmlFor="<%= attribute.name %>_id" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %></label>
+            <label htmlFor="<%= attribute.name %>_id" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %><span className="text-red-500">*</span></label>
 <% else -%>
-            <label htmlFor="<%= attribute.name %>" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %></label>
+            <label htmlFor="<%= attribute.name %>" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50">
+              <%= attribute.name.titleize %>
+<% if [:string, :text, :references].include?(attribute.type) -%>              <span className="text-red-500">*</span>
+<% end -%>
+            </label>
 <% end -%>
 <% if attribute.type == :boolean -%>
             <div className="flex items-center">
@@ -39,7 +157,7 @@ export default function Form({ errors, data, processing, handleChange, handleSub
                 type="checkbox"
                 checked={data.<%= singular_table_name %>.<%= attribute.name %>}
                 className={`w-4 h-4 bg-neutral-100 border-neutral-300 rounded text-utility-700 focus:ring-utility-700 dark:focus:ring-neutral-950 dark:focus:bg-neutral-800 dark:focus:border-neutral-800 dark:bg-neutral-800 dark:text-utility-600 dark:border-neutral-800 ${getErrorClass('<%= attribute.name %>')}`}
-                onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.checked)}
+                onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.checked)}
               />
               <label htmlFor="<%= attribute.name %>" className="ml-2 text-sm font-medium text-neutral-900 dark:text-neutral-300">
                 Active
@@ -53,7 +171,8 @@ export default function Form({ errors, data, processing, handleChange, handleSub
               name="<%= attribute.name %>"
               id="<%= attribute.name %>"
               value={data.<%= singular_table_name %>.<%= attribute.name %>}
-              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onBlur={e => handleFieldBlur('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
               className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
               placeholder="Select date and time"
               step="1"
@@ -64,7 +183,8 @@ export default function Form({ errors, data, processing, handleChange, handleSub
               name="<%= attribute.name %>"
               id="<%= attribute.name %>"
               value={data.<%= singular_table_name %>.<%= attribute.name %>}
-              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', formatDateForInput(e.target.value))}
+              onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>', formatDateForInput(e.target.value))}
+              onBlur={e => handleFieldBlur('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
               className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
               placeholder="Select date"
             />
@@ -74,7 +194,8 @@ export default function Form({ errors, data, processing, handleChange, handleSub
               name="<%= attribute.name %>"
               id="<%= attribute.name %>"
               value={data.<%= singular_table_name %>.<%= attribute.name %>}
-              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onBlur={e => handleFieldBlur('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
               className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
               placeholder="Select time"
               step="1"
@@ -85,7 +206,8 @@ export default function Form({ errors, data, processing, handleChange, handleSub
               name="<%= attribute.name %>"
               id="<%= attribute.name %>"
               value={data.<%= singular_table_name %>.<%= attribute.name %>}
-              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onBlur={e => handleFieldBlur('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
               className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
               placeholder="Enter <%= attribute.name.titleize %>"
               step="1"
@@ -103,7 +225,8 @@ export default function Form({ errors, data, processing, handleChange, handleSub
               name="<%= attribute.name %>"
               id="<%= attribute.name %>"
               value={data.<%= singular_table_name %>.<%= attribute.name %>}
-              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onBlur={e => handleFieldBlur('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
               className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
               placeholder="Enter <%= attribute.name.titleize %>"
               step="any"
@@ -113,7 +236,8 @@ export default function Form({ errors, data, processing, handleChange, handleSub
               id="<%= attribute.name %>_id"
               name="<%= attribute.name %>_id"
               value={data.<%= singular_table_name %>.<%= attribute.name %>_id}
-              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>_id', e.target.value)}
+              onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>_id', e.target.value)}
+              onBlur={e => handleFieldBlur('<%= singular_table_name %>.<%= attribute.name %>_id', e.target.value)}
               className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
             >
               <option value="">Select <%= attribute.name.titleize %></option>
@@ -129,29 +253,31 @@ export default function Form({ errors, data, processing, handleChange, handleSub
               name="<%= attribute.name %>"
               id="<%= attribute.name %>"
               value={data.<%= singular_table_name %>.<%= attribute.name %>}
-              onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+              onBlur={e => handleFieldBlur('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
               className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
               placeholder="Type <%= singular_table_name %> <%= attribute.name %>"
             />
 <% end -%>
-            {errors.<%= attribute.name %> && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{getErrorMessage('<%= attribute.name %>')}</p>}
+            {validationErrors.<%= attribute.name %><%= attribute.type == :references ? '_id' : '' %> && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{getErrorMessage('<%= attribute.name %><%= attribute.type == :references ? '_id' : '' %>')}</p>}
           </div>
 <% end -%>
         </div>
 <% attributes.each do |attribute| -%>
 <% if attribute.type == :text -%>
         <div className="w-full mt-6">
-          <label htmlFor="description" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %></label>
+          <label htmlFor="<%= attribute.name %>" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %><span className="text-red-500">*</span></label>
           <textarea
             id="<%= attribute.name %>"
             name="<%= attribute.name %>"
             value={data.<%= singular_table_name %>.<%= attribute.name %>}
-            onChange={e => handleChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+            onChange={e => handleFieldChange('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
+            onBlur={e => handleFieldBlur('<%= singular_table_name %>.<%= attribute.name %>', e.target.value)}
             className={`bg-neutral-50 border border-neutral-300 text-neutral-900 text-sm rounded-lg block w-full p-2.5 dark:bg-neutral-700 dark:text-neutral-50 dark:border-neutral-700 ${getErrorClass('<%= attribute.name %>')}`}
             placeholder="Type <%= singular_table_name %> <%= attribute.name %>"
             rows="4"
           />
-          {errors.<%= attribute.name %> && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{getErrorMessage('<%= attribute.name %>')}</p>}
+          {validationErrors.<%= attribute.name %> && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{getErrorMessage('<%= attribute.name %>')}</p>}
         </div>
 <% end -%>
 <% end -%>
