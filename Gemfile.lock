@@ -245,6 +245,8 @@ GEM
     public_suffix (6.0.1)
     puma (6.6.0)
       nio4r (~> 2.0)
+    pundit (2.5.0)
+      activesupport (>= 3.0.0)
     raabro (1.4.0)
     racc (1.8.1)
     rack (3.1.13)
@@ -301,6 +303,7 @@ GEM
       actionpack (>= 5.2)
       railties (>= 5.2)
     rexml (3.4.1)
+    rolify (6.0.1)
     rspec-core (3.13.3)
       rspec-support (~> 3.13.0)
     rspec-expectations (3.13.4)
@@ -448,8 +451,10 @@ DEPENDENCIES
   propshaft
   pry-byebug
   puma (>= 5.0)
+  pundit
   rails (~> 8.0.2)
   ransack
+  rolify
   rspec-rails
   rubocop-rails-omakase
   selenium-webdriver

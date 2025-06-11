@@ -27,6 +27,14 @@ class Users::SessionsController < Devise::SessionsController
 
   protected
 
+  def after_sign_in_path_for(resource)
+    if resource.operator?
+      user_path(resource) # Redireciona para /admin/users/:id
+    else
+      super # Comportamento padrão do Devise
+    end
+  end
+
   def set_flash_message!(type, kind, options = {})
     if type == :success
       flash[:success] = "Successfully signed in"

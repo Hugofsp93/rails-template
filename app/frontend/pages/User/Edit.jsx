@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Head, useForm } from '@inertiajs/react'
+import { Head, useForm, usePage } from '@inertiajs/react'
 import { useToast } from '../../hooks/useToast'
 import Toast from "../../components/Toast"
 import Form from './Form'
 
-export default function Edit({ props: { user } }) {
+export default function Edit() {
   const { toast } = useToast()
+  const { user, availableRoles } = usePage().props
   const [isEditingPassword, setIsEditingPassword] = useState(false)
   const { data, setData, put, processing, errors } = useForm({
     user: {
@@ -13,7 +14,8 @@ export default function Edit({ props: { user } }) {
       email: user.email,
       phone: user.phone || '',
       password: '',
-      password_confirmation: ''
+      password_confirmation: '',
+      role: user.role_name
     }
   })
 
@@ -58,6 +60,7 @@ export default function Edit({ props: { user } }) {
             isEditingPassword={isEditingPassword}
             setIsEditingPassword={setIsEditingPassword}
             isEdit={true}
+            availableRoles={availableRoles}
           />
         </div>
       </section>

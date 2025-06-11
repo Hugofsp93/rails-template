@@ -3,6 +3,13 @@ import { formatDate } from '../../utils/formatters'
 
 export default function Show({ props: { user } }) {
 
+  const roleName = (role) => {
+    if (role === 'super_admin') return 'Super Admin'
+    if (role === 'admin') return 'Admin'
+    if (role === 'operator') return 'Operator'
+    return role
+  }
+
   return (
     <>
       <Head title="User Details" />
@@ -26,6 +33,10 @@ export default function Show({ props: { user } }) {
             <div className="w-1/2">
               <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Phone</label>
               <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{user.phone}</div>
+            </div>
+            <div className="w-1/2">
+              <label className="mb-2 text-sm font-semibold leading-none text-neutral-900 dark:text-neutral-50">Role</label>
+              <div className="font-light text-neutral-500 sm:mb-5 dark:text-neutral-400">{roleName(user.role_name)}</div>
             </div>
           </dl>
           <dl className="flex justify-start border-b border-neutral-300 dark:border-neutral-700">

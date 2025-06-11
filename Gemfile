@@ -81,3 +81,7 @@ gem "httparty"
 # Pagination
 gem "pagy"
 gem "ransack"
+
+# Authorization
+gem "pundit"
+gem "rolify"

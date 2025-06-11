@@ -1,4 +1,5 @@
 class User < ApplicationRecord
+  rolify
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable, :trackable and :omniauthable
   devise :database_authenticatable, :registerable,
@@ -18,6 +19,43 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, on: :create
   validates :password_confirmation, presence: true, on: :create
   validate :password_required?, on: :update
+
+  # Callback to assign default role after creation
+  after_create :assign_default_role
+
+  # Role helper methods
+  def super_admin?
+    has_role?(:super_admin)
+  end
+
+  def admin?
+    has_role?(:admin)
+  end
+
+  def operator?
+    has_role?(:operator)
+  end
+
+  def role_name
+    roles.first&.name || "operator"
+  end
+
+  def can_manage_users?
+    super_admin? || admin?
+  end
+
+  def can_delete_user?(target_user)
+    return true if super_admin?
+    return false if target_user.super_admin? || target_user.admin?
+    admin?
+  end
+
+  def can_edit_user?(target_user)
+    return true if super_admin?
+    return true if admin? && !target_user.super_admin?
+    return true if operator? && target_user == self
+    false
+  end
 
   def password_required?
     if password.present?
@@ -39,5 +77,13 @@ class User < ApplicationRecord
 
   def should_validate_phone?
     admin_creation || persisted?
+  end
+
+  def assign_default_role
+    # If user already has roles, don't assign default
+    return if roles.any?
+
+    # Assign operator role by default for new registrations
+    add_role(:operator) unless admin_creation
   end
 end

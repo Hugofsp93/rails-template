@@ -1,17 +1,20 @@
-import { Head, useForm } from '@inertiajs/react'
+import { Head, useForm, usePage } from '@inertiajs/react'
 import { useToast } from '../../hooks/useToast'
 import Toast from "../../components/Toast"
 import Form from './Form'
 
 export default function New() {
   const { toast } = useToast()
+  const { availableRoles } = usePage().props
+  
   const { data, setData, post, processing, errors } = useForm({
     user: {
       name: '',
       email: '',
       phone: '',
       password: '',
-      password_confirmation: ''
+      password_confirmation: '',
+      role: ''
     }
   })
 
@@ -46,6 +49,7 @@ export default function New() {
             handleChange={handleChange}
             handleSubmit={handleSubmit}
             isEdit={false}
+            availableRoles={availableRoles}
           />
         </div>
       </section>

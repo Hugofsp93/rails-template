@@ -1,16 +1,19 @@
 import Toast from '../../components/Toast'
 import { useToast } from '../../hooks/useToast'
+import { useAuthorization } from '../../hooks/useAuthorization'
 import { Link } from '@inertiajs/react'
 import 'react-phone-input-2/lib/style.css'
 import '../../styles/phoneInput.css'
 import PhoneInputWrapper from '../../components/PhoneInputWrapper'
+import RoleSelector from '../../components/RoleSelector'
 import { useFormValidation } from '../../hooks/useFormValidation'
 import { required, minLength } from '../../utils/validationRules'
 import { email, password, phone } from '../../utils/userValidationRules'
 import { every } from 'lodash'
 
-export default function Form({ errors, data, processing, handleChange, handleSubmit, isEditingPassword, setIsEditingPassword, isEdit }) {
+export default function Form({ errors, data, processing, handleChange, handleSubmit, isEditingPassword, setIsEditingPassword, isEdit, availableRoles }) {
   const { toast } = useToast()
+  const { canAssignRole } = useAuthorization()
 
   // Define validation rules based on User model validations
   const validationRules = {
@@ -25,6 +28,17 @@ export default function Form({ errors, data, processing, handleChange, handleSub
       return email(value)
     },
     phone: (value) => phone(value, 'Phone'),
+    role: (value) => {
+      // Role validation only for admin creation
+      if (!isEdit && availableRoles?.length > 0) {
+        const requiredResult = required(value, 'Role')
+        if (requiredResult !== true) return requiredResult
+        if (!canAssignRole(value)) {
+          return 'You cannot assign this role'
+        }
+      }
+      return true
+    },
     password: (value) => {
       // Password is required on create, optional on update
       if (!isEdit || isEditingPassword) {
@@ -146,6 +160,16 @@ export default function Form({ errors, data, processing, handleChange, handleSub
             />
             {/* {validationErrors.phone && <p className="mt-1 text-sm text-red-600 dark:text-red-500">{getErrorMessage('phone')}</p>} */}
           </div>
+          
+          {/* Role selector - only show for admin creation or if user can assign roles */}
+          {(!isEdit || (isEdit && availableRoles?.length > 0)) && (
+            <RoleSelector
+              value={data.user.role}
+              onChange={(value) => handleFieldChange('user.role', value)}
+              availableRoles={availableRoles || []}
+              disabled={!availableRoles || availableRoles.length === 0}
+            />
+          )}
         </div>
 
         {isEdit && (
