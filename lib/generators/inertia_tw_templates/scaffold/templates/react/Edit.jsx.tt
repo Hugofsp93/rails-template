@@ -1,12 +1,16 @@
 import { Head, useForm, usePage } from '@inertiajs/react'
 import { useToast } from '../../hooks/useToast'
+import { useAuthorization } from '../../hooks/useAuthorization'
 import Toast from "../../components/Toast"
+import AccessDenied from "../../components/AccessDenied"
 import Form from './Form'
 import { formatValueForInput } from '../../utils/inputFormatters'
 
-export default function Edit({ props: { <%= singular_table_name %> } }) {
+export default function Edit() {
   const { toast } = useToast()
-<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+  const { <%= singular_table_name %>, <%= attributes.select { |attr| attr.type == :references && attr.name != 'user' }.map { |attribute| "#{attribute.name.pluralize}" }.join(",\n") %> } = usePage().props
+  const { canEdit } = useAuthorization()
+<% attributes.select { |attr| attr.type == :references && attr.name != 'user' }.each do |attribute| -%>
   const { <%= attribute.name.pluralize %> } = usePage().props
 <% end -%>
   const { data, setData, put, processing, errors } = useForm({
@@ -21,10 +25,15 @@ export default function Edit({ props: { <%= singular_table_name %> } }) {
 <% end -%>
 <%- end -%>
     },
-<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+<% attributes.select { |attr| attr.type == :references && attr.name != 'user' }.each do |attribute| -%>
     <%= attribute.name.pluralize %>: <%= attribute.name.pluralize %> || [],
 <% end -%>
   })
+
+  // Check if user can edit this <%= singular_table_name %>
+  if (!canEdit(<%= singular_table_name %>)) {
+    return <AccessDenied message={`You don't have permission to edit this <%= singular_table_name %>.`} />
+  }
 
   const handleChange = (field, value) => {
     setData(prev => ({
@@ -33,7 +42,7 @@ export default function Edit({ props: { <%= singular_table_name %> } }) {
         ...prev.<%= singular_table_name %>,
         [field.split('.')[1]]: value
       },
-<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+<% attributes.select { |attr| attr.type == :references && attr.name != 'user' }.each do |attribute| -%>
       <%= attribute.name.pluralize %>: prev.<%= attribute.name.pluralize %>,
 <% end -%>
     }))

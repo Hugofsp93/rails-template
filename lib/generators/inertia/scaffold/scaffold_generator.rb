@@ -10,7 +10,10 @@ module Inertia
 
       class_option :resource_route, type: :boolean
 
-      hook_for :scaffold_controller, required: true
+      hook_for :scaffold_controller, required: true do |invoked|
+        attribute_definitions = attributes.map { |attr| "#{attr.name}:#{attr.type}" }
+        invoke invoked, [ name ] + attribute_definitions, @options
+      end
     end
   end
 end

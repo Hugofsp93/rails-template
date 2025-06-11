@@ -4,6 +4,17 @@ Rails.application.routes.draw do
       resources :users, path: "admin/users"
   end
 
+  # API routes for testing
+  namespace :api do
+    resources :nades, only: [ :create, :index, :show, :update, :destroy ]
+    resources :users, only: [ :create, :index, :show, :update, :destroy ]
+
+    namespace :test do
+      post "clear_database"
+      post "seed_data"
+    end
+  end
+
   # Public routes
   resources :pages
   get "contact", to: "pages#contact"

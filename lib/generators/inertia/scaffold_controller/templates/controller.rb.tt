@@ -1,16 +1,15 @@
 class <%= controller_class_name %>Controller < ApplicationController
   before_action :set_<%= singular_table_name %>, only: %i[ show edit update destroy ]
-  before_action :authenticate_user!
-  before_action :authorize_<%= singular_table_name %>!, only: %i[ edit update destroy ]
 
   # GET <%= route_url %>
   def index
-    @<%= plural_table_name %> = <%= class_name %>.all
+    authorize <%= class_name %>
+    @<%= plural_table_name %> = policy_scope(<%= class_name %>).order(created_at: :desc)
 
     # Search functionality
     if params[:search].present?
       @<%= plural_table_name %> = @<%= plural_table_name %>.where(
-        "<%= attributes.select { |attr| [:string, :text].include?(attr.type) }.map { |attr| "#{attr.name} ILIKE :search" }.join(" OR ") %>",
+        "<%= generated_attributes.select { |attr| [:string, :text].include?(attr.type) }.map { |attr| "#{attr.name} ILIKE :search" }.join(" OR ") %>",
         search: "%#{params[:search]}%"
       )
     end
@@ -36,42 +35,51 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   # GET <%= route_url %>/1
   def show
+    authorize @<%= singular_table_name %>
     render inertia: "<%= class_name %>/Show", props: {
       <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
-<% references = attributes.select { |attr| attr.type == :references } -%>
+<% references = generated_attributes.select { |attr| attr.type == :references } -%>
 <%= references.map { |attribute| "      #{attribute.name.singularize}: serialize_#{attribute.name.singularize}(@#{singular_table_name}.#{attribute.name.singularize})" }.join(",\n") %>
     }
   end
 
   # GET <%= route_url %>/new
   def new
+    authorize <%= class_name %>
     @<%= singular_table_name %> = <%= orm_class.build(class_name) %>
     render inertia: "<%= class_name %>/New", props: {
       <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
-<% references = attributes.select { |attr| attr.type == :references } -%>
+<% references = generated_attributes.select { |attr| attr.type == :references } -%>
 <%= references.map { |attribute| "      #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
     }
   end
 
   # GET <%= route_url %>/1/edit
   def edit
+    authorize @<%= singular_table_name %>
     render inertia: "<%= class_name %>/Edit", props: {
       <%= singular_table_name %>: serialize_<%= singular_table_name %>(@<%= singular_table_name %>),
-<% references = attributes.select { |attr| attr.type == :references } -%>
+<% references = generated_attributes.select { |attr| attr.type == :references } -%>
 <%= references.map { |attribute| "      #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
     }
   end
 
   # POST <%= route_url %>
   def create
+    authorize <%= class_name %>
     @<%= singular_table_name %> = <%= orm_class.build(class_name, "#{singular_table_name}_params") %>
+
+<% if generated_attributes.any? { |attr| attr.type == :references && attr.name == 'user' } -%>
+    # Automatically set the current user
+    @<%= singular_table_name %>.user = current_user
+<% end -%>
 
     if @<%= singular_table_name %>.save
       redirect_to <%= singular_table_name %>_url(@<%= singular_table_name %>), notice: "<%= human_name %> was successfully created."
     else
       redirect_to new_<%= singular_table_name %>_url, inertia: {
         errors: @<%= singular_table_name %>.errors,
-<% references = attributes.select { |attr| attr.type == :references } -%>
+<% references = generated_attributes.select { |attr| attr.type == :references } -%>
 <%= references.map { |attribute| "        #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
       }
     end
@@ -79,12 +87,13 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   # PATCH/PUT <%= route_url %>/1
   def update
+    authorize @<%= singular_table_name %>
     if @<%= singular_table_name %>.update(<%= singular_table_name %>_params)
       redirect_to <%= singular_table_name %>_url(@<%= singular_table_name %>), notice: "<%= human_name %> was successfully updated."
     else
       redirect_to edit_<%= singular_table_name %>_url(@<%= singular_table_name %>), inertia: {
         errors: @<%= singular_table_name %>.errors,
-<% references = attributes.select { |attr| attr.type == :references } -%>
+<% references = generated_attributes.select { |attr| attr.type == :references } -%>
 <%= references.map { |attribute| "        #{attribute.name.pluralize}: #{attribute.name.classify}.all.map { |#{attribute.name.singularize}| serialize_#{attribute.name.singularize}(#{attribute.name.singularize}) }" }.join(",\n") %>
       }
     end
@@ -92,6 +101,7 @@ class <%= controller_class_name %>Controller < ApplicationController
 
   # DELETE <%= route_url %>/1
   def destroy
+    authorize @<%= singular_table_name %>
     @<%= singular_table_name %>.destroy!
     redirect_to <%= index_helper %>_url, notice: "<%= human_name %> was successfully destroyed."
   end
@@ -104,31 +114,45 @@ class <%= controller_class_name %>Controller < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def <%= "#{singular_table_name}_params" %>
-      <%- if attributes_names.empty? -%>
+      <%- if generated_attributes.empty? -%>
       params.fetch(:<%= singular_table_name %>, {})
       <%- else -%>
-      params.require(:<%= singular_table_name %>).permit(<%= permitted_params %>)
+<% if generated_attributes.any? { |attr| attr.type == :references && attr.name == 'user' } -%>
+      # Define permitted attributes excluding user_id since it's set automatically
+      permitted_attrs = [
+<% generated_attributes.each do |attribute| -%>
+<% if attribute.type == :references && attribute.name == 'user' -%>
+        # user_id is excluded - set automatically
+<% else -%>
+        :<%= attribute.name %><%= attribute.type == :references ? '_id' : '' %>,
+<% end -%>
+<% end -%>
+      ]
+<% else -%>
+      permitted_attrs = [
+<% generated_attributes.each do |attribute| -%>
+        :<%= attribute.name %><%= attribute.type == :references ? '_id' : '' %>,
+<% end -%>
+      ]
+<% end -%>
+      params.require(:<%= singular_table_name %>).permit(permitted_attrs)
       <%- end -%>
     end
 
     def serialize_<%= singular_table_name %>(<%= singular_table_name %>)
       <%= singular_table_name %>.as_json(only: [
         :id,
-        <%= attributes_names.map { |name| ":#{name}" }.join(",\n        ") %>,
+<% generated_attributes.each do |attribute| -%>
+        :<%= attribute.name %><%= attribute.type == :references ? '_id' : '' %>,
+<% end -%>
         :created_at,
         :updated_at
       ])
     end
 
-<% attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
+<% generated_attributes.select { |attr| attr.type == :references }.each do |attribute| -%>
     def serialize_<%= attribute.name.singularize %>(<%= attribute.name.singularize %>)
       <%= attribute.name.singularize %>.as_json
     end
 <% end -%>
-
-    def authorize_<%= singular_table_name %>!
-      unless current_user.super_admin? || current_user.admin? || current_user == @<%= singular_table_name %> # current_user.admin?
-        redirect_to <%= index_helper %>_url, alert: "You are not authorized to perform this action."
-      end
-    end
 end

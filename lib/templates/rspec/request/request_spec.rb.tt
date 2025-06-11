@@ -1,0 +1,175 @@
+require "rails_helper"
+
+RSpec.describe "<%= plural_table_name.humanize %>", type: :request do
+  let(:valid_attributes) {
+    attributes_for(:<%= singular_table_name %>)
+  }
+
+  let(:invalid_attributes) {
+    attributes_for(:<%= singular_table_name %>, :with_invalid_attributes)
+  }
+
+  let(:<%= singular_table_name %>) { create(:<%= singular_table_name %>) }
+
+  <% attributes.each do |attribute| -%>
+  <% if attribute.name.include?('user') -%>
+  let(:user) { create(:user) }
+  <% end -%>
+  <% end -%>
+
+  <% if options[:authentication] %>
+  before do
+    sign_in create(:user)
+  end
+  <% end %>
+
+  describe "GET /index" do
+    it "renders a successful response" do
+      get <%= plural_table_name %>_url
+      expect(response).to be_successful
+    end
+
+    <% attributes.each do |attribute| -%>
+    <% if attribute.name.include?('status') -%>
+    it "filters by status" do
+      get <%= plural_table_name %>_url, params: { status: "active" }
+      expect(response).to be_successful
+    end
+    <% end -%>
+    <% end -%>
+    <% attributes.each do |attribute| -%>
+    <% if attribute.name.include?('name') -%>
+    it "searches by name" do
+      get <%= plural_table_name %>_url, params: { search: "test" }
+      expect(response).to be_successful
+    end
+    <% end -%>
+    <% end -%>
+  end
+
+  describe "GET /show" do
+    it "renders a successful response" do
+      get <%= singular_table_name %>_url(<%= singular_table_name %>)
+      expect(response).to be_successful
+    end
+  end
+
+  describe "GET /new" do
+    it "renders a successful response" do
+      get new_<%= singular_table_name %>_url
+      expect(response).to be_successful
+    end
+  end
+
+  describe "GET /edit" do
+    it "renders a successful response" do
+      get edit_<%= singular_table_name %>_url(<%= singular_table_name %>)
+      expect(response).to be_successful
+    end
+  end
+
+  describe "POST /create" do
+    context "with valid parameters" do
+      it "creates a new <%= class_name %>" do
+        expect {
+          post <%= plural_table_name %>_url, params: { <%= singular_table_name %>: valid_attributes }
+        }.to change(<%= class_name %>, :count).by(1)
+      end
+
+      it "redirects to the created <%= singular_table_name %>" do
+        post <%= plural_table_name %>_url, params: { <%= singular_table_name %>: valid_attributes }
+        expect(response).to redirect_to(<%= singular_table_name %>_url(<%= class_name %>.last))
+      end
+    end
+
+    context "with invalid parameters" do
+      it "does not create a new <%= class_name %>" do
+        expect {
+          post <%= plural_table_name %>_url, params: { <%= singular_table_name %>: invalid_attributes }
+        }.to change(<%= class_name %>, :count).by(0)
+      end
+
+      it "redirects to the new <%= singular_table_name %> page with errors" do
+        post <%= plural_table_name %>_url, params: { <%= singular_table_name %>: invalid_attributes }
+        expect(response).to redirect_to(new_<%= singular_table_name %>_url)
+      end
+    end
+  end
+
+  describe "PATCH /update" do
+    context "with valid parameters" do
+      let(:new_attributes) {
+        <% attributes.each do |attribute| -%>
+        <% if attribute.type == :string || attribute.type == :text -%>
+        { <%= attribute.name %>: "New <%= attribute.name.humanize %>" }
+        <% break -%>
+        <% end -%>
+        <% end -%>
+      }
+
+      it "updates the requested <%= singular_table_name %>" do
+        patch <%= singular_table_name %>_url(<%= singular_table_name %>), params: { <%= singular_table_name %>: new_attributes }
+        <%= singular_table_name %>.reload
+        <% attributes.each do |attribute| -%>
+        <% if attribute.type == :string || attribute.type == :text -%>
+        expect(<%= singular_table_name %>.<%= attribute.name %>).to eq("New <%= attribute.name.humanize %>")
+        <% break -%>
+        <% end -%>
+        <% end -%>
+      end
+
+      it "redirects to the <%= singular_table_name %>" do
+        patch <%= singular_table_name %>_url(<%= singular_table_name %>), params: { <%= singular_table_name %>: new_attributes }
+        expect(response).to redirect_to(<%= singular_table_name %>_url(<%= singular_table_name %>))
+      end
+    end
+
+    context "with invalid parameters" do
+      it "redirects to the edit page with errors" do
+        patch <%= singular_table_name %>_url(<%= singular_table_name %>), params: { <%= singular_table_name %>: invalid_attributes }
+        expect(response).to redirect_to(edit_<%= singular_table_name %>_url(<%= singular_table_name %>))
+      end
+    end
+  end
+
+  describe "DELETE /destroy" do
+    it "destroys the requested <%= singular_table_name %>" do
+      <%= singular_table_name %>_to_delete = create(:<%= singular_table_name %>)
+      expect {
+        delete <%= singular_table_name %>_url(<%= singular_table_name %>_to_delete)
+      }.to change(<%= class_name %>, :count).by(-1)
+    end
+
+    it "redirects to the <%= plural_table_name %> list" do
+      <%= singular_table_name %>_to_delete = create(:<%= singular_table_name %>)
+      delete <%= singular_table_name %>_url(<%= singular_table_name %>_to_delete)
+      expect(response).to redirect_to(<%= plural_table_name %>_url)
+    end
+  end
+
+  <% attributes.each do |attribute| -%>
+  <% if attribute.name.include?('status') -%>
+  describe "PATCH /toggle_status" do
+    it "toggles the status" do
+      patch toggle_status_<%= singular_table_name %>_url(<%= singular_table_name %>)
+      expect(response).to redirect_to(<%= singular_table_name %>_url(<%= singular_table_name %>))
+    end
+  end
+  <% end -%>
+  <% end -%>
+
+  <% if options[:authorization] %>
+  describe "Authorization" do
+    context "when user is not authorized" do
+      before do
+        allow_any_instance_of(ApplicationController).to receive(:authorize!).and_raise(CanCan::AccessDenied)
+      end
+
+      it "redirects to root path" do
+        get <%= plural_table_name %>_url
+        expect(response).to redirect_to(root_path)
+      end
+    end
+  end
+  <% end %>
+end 

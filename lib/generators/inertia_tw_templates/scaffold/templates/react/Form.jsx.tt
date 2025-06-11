@@ -12,7 +12,7 @@ export default function Form({ errors, data, processing, handleChange, handleSub
   // Define validation rules
   const validationRules = {
 <% attributes.each do |attribute| -%>
-<% if attribute.required? -%>
+<% if attribute.required? && !(attribute.type == :references && attribute.name == 'user') -%>
 <% if attribute.type == :references -%>
     <%= attribute.name %>_id: (value) => {
 <% else -%>
@@ -138,7 +138,7 @@ export default function Form({ errors, data, processing, handleChange, handleSub
       { toast && <Toast {...toast} /> }
       <form onSubmit={handleSubmitForm} noValidate>
         <div className="grid gap-4 grid-cols-1 md:grid-cols-2 sm:gap-6">
-<% attributes.reject { |attr| attr.type == :text }.each do |attribute| -%>
+<% attributes.reject { |attr| attr.type == :text || (attr.type == :references && attr.name == 'user') }.each do |attribute| -%>
           <div className="h-[75px]">
 <% if attribute.type == :references -%>
             <label htmlFor="<%= attribute.name %>_id" className="block mb-2 text-sm font-medium text-neutral-900 dark:text-neutral-50"><%= attribute.name.titleize %><span className="text-red-500">*</span></label>

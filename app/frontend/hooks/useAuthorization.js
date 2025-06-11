@@ -11,6 +11,30 @@ export const useAuthorization = () => {
   const isAdmin = () => currentUser?.admin || false
   const isOperator = () => currentUser?.operator || false
 
+  // Generic authorization methods for any model
+  const canManage = (modelName) => {
+    // Allow all authenticated users to access index
+    // The backend will filter what they can see based on their role
+    return true
+  }
+  const canCreate = (modelName) => isSuperAdmin() || isAdmin() || isOperator()
+  const canEdit = (record) => {
+    if (isSuperAdmin() || isAdmin() || isOperator()) return true
+    // if (isOperator() && record.user_id === currentUser?.id) return true
+    return false
+  }
+  const canDelete = (record) => {
+    if (isSuperAdmin() || isAdmin() || isOperator()) return true
+    // if (isOperator() && record.user_id === currentUser?.id) return true
+    return false
+  }
+  const canSee = (record) => {
+    if (isSuperAdmin() || isAdmin() || isOperator()) return true
+    // if (isOperator() && record.user_id === currentUser?.id) return true
+    return false
+  }
+
+  // User-specific methods (keeping for backward compatibility)
   const canManageUsers = () => isSuperAdmin() || isAdmin()
   const canCreateUsers = () => isSuperAdmin() || isAdmin()
   const canEditUser = (targetUser) => {
@@ -53,6 +77,13 @@ export const useAuthorization = () => {
     isSuperAdmin,
     isAdmin,
     isOperator,
+    // Generic methods
+    canManage,
+    canCreate,
+    canEdit,
+    canDelete,
+    canSee,
+    // User-specific methods (for backward compatibility)
     canManageUsers,
     canCreateUsers,
     canEditUser,

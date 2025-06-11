@@ -1,0 +1,73 @@
+class <%= class_name %>Policy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      if user.super_admin?
+        scope.all
+      elsif user.admin?
+        scope.all # Admin can see all records
+      else
+        # Operator can only see records they own (if the model has a user relationship)
+        if scope.column_names.include?("user_id")
+          scope.where(user: user)
+        else
+          scope.all # If no user relationship, allow all (adjust as needed)
+        end
+      end
+    end
+  end
+
+  def index?
+    user.super_admin? || user.admin? || user.operator?
+  end
+
+  def show?
+    return true if user.super_admin? || user.admin? || user.operator?
+
+    # Check if record belongs to user (if the model has a user relationship)
+    if record.respond_to?(:user)
+      record.user == user
+    else
+      true # If no user relationship, allow access (adjust as needed)
+    end
+  end
+
+  def create?
+    user.super_admin? || user.admin? || user.operator?
+  end
+
+  def update?
+    return true if user.super_admin? || user.admin? || user.operator?
+
+    # Check if record belongs to user (if the model has a user relationship)
+    if record.respond_to?(:user)
+      record.user == user
+    else
+      false # If no user relationship, only admins can edit
+    end
+  end
+
+  def destroy?
+    return true if user.super_admin? || user.admin?
+
+    # Check if record belongs to user (if the model has a user relationship)
+    if record.respond_to?(:user)
+      record.user == user
+    else
+      false # If no user relationship, only admins can delete
+    end
+  end
+
+  # Custom permissions for specific actions
+  def manage?
+    user.super_admin? || user.admin?
+  end
+
+  def moderate?
+    user.super_admin? || user.admin?
+  end
+
+  # Add more custom permissions as needed for your specific model
+  # def publish?
+  #   user.super_admin? || user.admin?
+  # end
+end

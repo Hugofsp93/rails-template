@@ -1,0 +1,167 @@
+describe('<%= class_name.pluralize %>', () => {
+  beforeEach(() => {
+    // Login as admin user
+    cy.login('admin@example.com', 'password123')
+  })
+
+  describe('Index Page', () => {
+    it('should display <%= plural_table_name %> list', () => {
+      cy.visit('/<%= plural_table_name %>')
+      cy.get('h2').should('contain', '<%= plural_table_name.titleize %>')
+      cy.get('[data-testid="<%= singular_table_name %>-table"]').should('exist')
+    })
+
+    it('should show create button for authorized users', () => {
+      cy.visit('/<%= plural_table_name %>')
+      cy.get('[data-testid="create-<%= singular_table_name %>-btn"]').should('be.visible')
+    })
+
+    it('should filter <%= plural_table_name %> by search', () => {
+      cy.visit('/<%= plural_table_name %>')
+      cy.get('[data-testid="search-input"]').type('test')
+      cy.get('[data-testid="search-button"]').click()
+      // Add assertions for filtered results
+    })
+
+    it('should filter <%= plural_table_name %> by status', () => {
+      cy.visit('/<%= plural_table_name %>')
+      cy.get('[data-testid="status-filter"]').select('active')
+      // Add assertions for filtered results
+    })
+
+    it('should paginate results', () => {
+      cy.visit('/<%= plural_table_name %>')
+      cy.get('[data-testid="pagination"]').should('exist')
+      // Add pagination tests if needed
+    })
+  })
+
+  describe('Show Page', () => {
+    it('should display <%= singular_table_name %> details', () => {
+      // Create a <%= singular_table_name %> first
+      cy.create<%= class_name %>().then((<%= singular_table_name %>) => {
+        cy.visit(`/<%= plural_table_name %>/${<%= singular_table_name %>.id}`)
+        cy.get('h2').should('contain', '<%= singular_table_name.titleize %> Details')
+<% attributes.reject { |attr| attr.type == :text }.each do |attribute| -%>
+        cy.get('[data-testid="<%= attribute.name %>-field"]').should('exist')
+<% end -%>
+      })
+    })
+
+    it('should show edit button for authorized users', () => {
+      cy.create<%= class_name %>().then((<%= singular_table_name %>) => {
+        cy.visit(`/<%= plural_table_name %>/${<%= singular_table_name %>.id}`)
+        cy.get('[data-testid="edit-<%= singular_table_name %>-btn"]').should('be.visible')
+      })
+    })
+  })
+
+  describe('Create Page', () => {
+    it('should create a new <%= singular_table_name %>', () => {
+      cy.visit('/<%= plural_table_name %>/new')
+      
+<% attributes.each do |attribute| -%>
+<% if attribute.type == :string -%>
+      cy.get('[data-testid="<%= attribute.name %>-input"]').type('Test <%= attribute.name.titleize %>')
+<% elsif attribute.type == :text -%>
+      cy.get('[data-testid="<%= attribute.name %>-textarea"]').type('Test <%= attribute.name.titleize %> description')
+<% elsif attribute.type == :integer -%>
+      cy.get('[data-testid="<%= attribute.name %>-input"]').type('123')
+<% elsif attribute.type == :boolean -%>
+      cy.get('[data-testid="<%= attribute.name %>-checkbox"]').check()
+<% elsif attribute.type == :date -%>
+      cy.get('[data-testid="<%= attribute.name %>-input"]').type('2024-01-01')
+<% elsif attribute.type == :datetime -%>
+      cy.get('[data-testid="<%= attribute.name %>-input"]').type('2024-01-01T10:00')
+<% elsif attribute.type == :time -%>
+      cy.get('[data-testid="<%= attribute.name %>-input"]').type('10:00')
+<% elsif attribute.type == :references -%>
+      cy.get('[data-testid="<%= attribute.name %>-select"]').select('1')
+<% end -%>
+<% end -%>
+
+      cy.get('[data-testid="submit-btn"]').click()
+      
+      // Should redirect to show page
+      cy.url().should('include', '/<%= plural_table_name %>/')
+      cy.get('[data-testid="success-message"]').should('contain', 'successfully created')
+    })
+
+    it('should show validation errors for invalid data', () => {
+      cy.visit('/<%= plural_table_name %>/new')
+      
+      // Submit without required fields
+      cy.get('[data-testid="submit-btn"]').click()
+      
+      // Should show validation errors
+      cy.get('[data-testid="error-messages"]').should('exist')
+    })
+  })
+
+  describe('Edit Page', () => {
+    it('should update an existing <%= singular_table_name %>', () => {
+      cy.create<%= class_name %>().then((<%= singular_table_name %>) => {
+        cy.visit(`/<%= plural_table_name %>/${<%= singular_table_name %>.id}/edit`)
+        
+<% attributes.each do |attribute| -%>
+<% if attribute.type == :string -%>
+        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('Updated <%= attribute.name.titleize %>')
+<% elsif attribute.type == :text -%>
+        cy.get('[data-testid="<%= attribute.name %>-textarea"]').clear().type('Updated <%= attribute.name.titleize %> description')
+<% elsif attribute.type == :integer -%>
+        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('456')
+<% elsif attribute.type == :boolean -%>
+        cy.get('[data-testid="<%= attribute.name %>-checkbox"]').uncheck()
+<% elsif attribute.type == :date -%>
+        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('2024-02-01')
+<% elsif attribute.type == :datetime -%>
+        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('2024-02-01T15:30')
+<% elsif attribute.type == :time -%>
+        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('15:30')
+<% elsif attribute.type == :references -%>
+        cy.get('[data-testid="<%= attribute.name %>-select"]').select('2')
+<% end -%>
+<% end -%>
+
+        cy.get('[data-testid="submit-btn"]').click()
+        
+        // Should redirect to show page
+        cy.url().should('include', '/<%= plural_table_name %>/')
+        cy.get('[data-testid="success-message"]').should('contain', 'successfully updated')
+      })
+    })
+  })
+
+  describe('Delete Functionality', () => {
+    it('should delete a <%= singular_table_name %>', () => {
+      cy.create<%= class_name %>().then((<%= singular_table_name %>) => {
+        cy.visit('/<%= plural_table_name %>')
+        
+        // Find and click delete button for the specific <%= singular_table_name %>
+        cy.get(`[data-testid="delete-<%= singular_table_name %>-${<%= singular_table_name %>.id}"]`).click()
+        
+        // Confirm deletion
+        cy.get('[data-testid="confirm-delete-btn"]').click()
+        
+        // Should redirect to index page
+        cy.url().should('include', '/<%= plural_table_name %>')
+        cy.get('[data-testid="success-message"]').should('contain', 'successfully destroyed')
+      })
+    })
+  })
+
+  describe('Authorization', () => {
+    it('should deny access to unauthorized users', () => {
+      // Login as regular user
+      cy.login('user@example.com', 'password123')
+      
+      cy.visit('/<%= plural_table_name %>')
+      cy.get('[data-testid="access-denied"]').should('contain', "You don't have permission")
+    })
+
+    it('should allow access to authorized users', () => {
+      cy.visit('/<%= plural_table_name %>')
+      cy.get('[data-testid="<%= singular_table_name %>-table"]').should('exist')
+    })
+  })
+}) 

@@ -50,6 +50,12 @@ group :development, :test do
   gem "faker"
   gem "shoulda-matchers"
   gem "database_cleaner-active_record"
+
+  # Test coverage
+  gem "simplecov", require: false
+
+  # Cypress integration
+  gem "cypress-rails", require: false
 end
 
 group :development do

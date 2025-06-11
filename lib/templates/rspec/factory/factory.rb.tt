@@ -1,0 +1,87 @@
+FactoryBot.define do
+  factory :<%= singular_table_name %> do
+<% attributes.each do |attribute| -%>
+<% if attribute.type == :string || attribute.type == :text -%>
+<% if attribute.name.include?('name') -%>
+    sequence(:<%= attribute.name %>) { |n| "<%= class_name %> #{n}" }
+<% elsif attribute.name.include?('email') -%>
+    sequence(:<%= attribute.name %>) { |n| "<%= singular_table_name %>#{n}@example.com" }
+<% elsif attribute.name.include?('phone') -%>
+    sequence(:<%= attribute.name %>) { |n| "+551199999#{n.to_s.rjust(4, '0')}" }
+<% elsif attribute.name.include?('description') -%>
+    sequence(:<%= attribute.name %>) { |n| "Description for <%= class_name %> #{n}" }
+<% else -%>
+    sequence(:<%= attribute.name %>) { |n| "<%= attribute.name.humanize %> #{n}" }
+<% end -%>
+<% elsif attribute.type == :integer -%>
+    <%= attribute.name %> { rand(1..100) }
+<% elsif attribute.type == :decimal -%>
+    <%= attribute.name %> { rand(10.0..1000.0).round(2) }
+<% elsif attribute.type == :boolean -%>
+    <%= attribute.name %> { false }
+<% elsif attribute.type == :datetime -%>
+    <%= attribute.name %> { Time.current }
+<% elsif attribute.type == :date -%>
+    <%= attribute.name %> { Date.current }
+<% elsif attribute.type == :references -%>
+    association :<%= attribute.name.gsub('_id', '') %>
+<% end -%>
+<% end -%>
+<% attributes.each do |attribute| -%>
+<% if attribute.name.include?('status') -%>
+    status { "active" }
+<% end -%>
+<% end -%>
+<% attributes.each do |attribute| -%>
+<% if attribute.name.include?('confirmed') -%>
+    confirmed_at { Time.current }
+<% end -%>
+<% end -%>
+<% attributes.each do |attribute| -%>
+<% if attribute.name.include?('admin') -%>
+    admin { false }
+<% end -%>
+<% end -%>
+
+<% attributes.each do |attribute| -%>
+<% if attribute.name.include?('admin') -%>
+    trait :admin do
+      admin { true }
+    end
+<% end -%>
+<% end -%>
+
+    trait :with_invalid_attributes do
+<% attributes.each do |attribute| -%>
+<% if attribute.type == :string || attribute.type == :text -%>
+      <%= attribute.name %> { nil }
+<% end -%>
+<% end -%>
+<% attributes.each do |attribute| -%>
+<% if attribute.name.include?('email') -%>
+      <%= attribute.name %> { "invalid_email" }
+<% end -%>
+<% end -%>
+<% attributes.each do |attribute| -%>
+<% if attribute.name.include?('phone') -%>
+      <%= attribute.name %> { "invalid_phone" }
+<% end -%>
+<% end -%>
+    end
+
+<% attributes.each do |attribute| -%>
+<% if attribute.name.include?('confirmed') -%>
+    trait :unconfirmed do
+      confirmed_at { nil }
+    end
+<% end -%>
+<% end -%>
+<% attributes.each do |attribute| -%>
+<% if attribute.name.include?('status') -%>
+    trait :inactive do
+      status { "inactive" }
+    end
+<% end -%>
+<% end -%>
+  end
+end 
