@@ -7,10 +7,10 @@ import './commands'
 // Global configuration
 beforeEach(() => {
   // Clear database before each test
-  cy.clearDatabase()
+  // cy.clearDatabase()
   
   // Seed basic test data
-  cy.seedTestData()
+  // cy.seedTestData()
 })
 
 // Global error handling

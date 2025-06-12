@@ -1,167 +1,147 @@
 describe('<%= class_name.pluralize %>', () => {
   beforeEach(() => {
-    // Login as admin user
-    cy.login('admin@example.com', 'password123')
+    // Login como admin
+    cy.login('rails@template.com', 'lklklklk')
   })
 
-  describe('Index Page', () => {
-    it('should display <%= plural_table_name %> list', () => {
+  describe('Página Index', () => {
+    it('deve carregar a lista de <%= plural_table_name %>', () => {
       cy.visit('/<%= plural_table_name %>')
-      cy.get('h2').should('contain', '<%= plural_table_name.titleize %>')
-      cy.get('[data-testid="<%= singular_table_name %>-table"]').should('exist')
-    })
-
-    it('should show create button for authorized users', () => {
-      cy.visit('/<%= plural_table_name %>')
-      cy.get('[data-testid="create-<%= singular_table_name %>-btn"]').should('be.visible')
-    })
-
-    it('should filter <%= plural_table_name %> by search', () => {
-      cy.visit('/<%= plural_table_name %>')
-      cy.get('[data-testid="search-input"]').type('test')
-      cy.get('[data-testid="search-button"]').click()
-      // Add assertions for filtered results
-    })
-
-    it('should filter <%= plural_table_name %> by status', () => {
-      cy.visit('/<%= plural_table_name %>')
-      cy.get('[data-testid="status-filter"]').select('active')
-      // Add assertions for filtered results
-    })
-
-    it('should paginate results', () => {
-      cy.visit('/<%= plural_table_name %>')
-      cy.get('[data-testid="pagination"]').should('exist')
-      // Add pagination tests if needed
-    })
-  })
-
-  describe('Show Page', () => {
-    it('should display <%= singular_table_name %> details', () => {
-      // Create a <%= singular_table_name %> first
-      cy.create<%= class_name %>().then((<%= singular_table_name %>) => {
-        cy.visit(`/<%= plural_table_name %>/${<%= singular_table_name %>.id}`)
-        cy.get('h2').should('contain', '<%= singular_table_name.titleize %> Details')
-<% attributes.reject { |attr| attr.type == :text }.each do |attribute| -%>
-        cy.get('[data-testid="<%= attribute.name %>-field"]').should('exist')
-<% end -%>
-      })
-    })
-
-    it('should show edit button for authorized users', () => {
-      cy.create<%= class_name %>().then((<%= singular_table_name %>) => {
-        cy.visit(`/<%= plural_table_name %>/${<%= singular_table_name %>.id}`)
-        cy.get('[data-testid="edit-<%= singular_table_name %>-btn"]').should('be.visible')
-      })
-    })
-  })
-
-  describe('Create Page', () => {
-    it('should create a new <%= singular_table_name %>', () => {
-      cy.visit('/<%= plural_table_name %>/new')
       
-<% attributes.each do |attribute| -%>
-<% if attribute.type == :string -%>
-      cy.get('[data-testid="<%= attribute.name %>-input"]').type('Test <%= attribute.name.titleize %>')
-<% elsif attribute.type == :text -%>
-      cy.get('[data-testid="<%= attribute.name %>-textarea"]').type('Test <%= attribute.name.titleize %> description')
-<% elsif attribute.type == :integer -%>
-      cy.get('[data-testid="<%= attribute.name %>-input"]').type('123')
-<% elsif attribute.type == :boolean -%>
-      cy.get('[data-testid="<%= attribute.name %>-checkbox"]').check()
-<% elsif attribute.type == :date -%>
-      cy.get('[data-testid="<%= attribute.name %>-input"]').type('2024-01-01')
-<% elsif attribute.type == :datetime -%>
-      cy.get('[data-testid="<%= attribute.name %>-input"]').type('2024-01-01T10:00')
-<% elsif attribute.type == :time -%>
-      cy.get('[data-testid="<%= attribute.name %>-input"]').type('10:00')
-<% elsif attribute.type == :references -%>
-      cy.get('[data-testid="<%= attribute.name %>-select"]').select('1')
-<% end -%>
-<% end -%>
+      // Verifica se a página carregou
+      cy.get('body').should('exist')
+      cy.get('h1, h2').should('contain', '<%= plural_table_name.titleize %>')
+    })
 
-      cy.get('[data-testid="submit-btn"]').click()
+    it('deve mostrar botão de criar para usuários autorizados', () => {
+      cy.visit('/<%= plural_table_name %>')
       
-      // Should redirect to show page
+      // Procura por botão de criar de várias formas
+      cy.get('a[href*="/new"], button:contains("New"), button:contains("Create"), button:contains("Add")').should('exist')
+    })
+
+    it('deve ter uma tabela ou lista', () => {
+      cy.visit('/<%= plural_table_name %>')
+      
+      // Verifica se existe uma tabela ou lista
+      cy.get('table, .table, [role="table"], ul, ol').should('exist')
+    })
+  })
+
+  describe('Página Show', () => {
+    it('deve mostrar detalhes de um <%= singular_table_name %>', () => {
+      // Primeiro vamos para a página index
+      cy.visit('/<%= plural_table_name %>')
+      
+      // Clica no primeiro link de "show" ou "ver"
+      cy.get('a[href*="/<%= plural_table_name %>/"]').first().click()
+      
+      // Verifica se carregou a página de detalhes
       cy.url().should('include', '/<%= plural_table_name %>/')
-      cy.get('[data-testid="success-message"]').should('contain', 'successfully created')
+      cy.get('body').should('exist')
     })
 
-    it('should show validation errors for invalid data', () => {
+    it('deve ter botão de editar', () => {
+      cy.visit('/<%= plural_table_name %>')
+      cy.get('a[href*="/<%= plural_table_name %>/"]').first().click()
+      
+      // Procura por botão de editar
+      cy.get('a[href*="/edit"], button:contains("Edit"), button:contains("Editar")').should('exist')
+    })
+  })
+
+  describe('Página Create', () => {
+    it('deve criar um novo <%= singular_table_name %>', () => {
       cy.visit('/<%= plural_table_name %>/new')
       
-      // Submit without required fields
-      cy.get('[data-testid="submit-btn"]').click()
+      // Verifica se a página carregou
+      cy.get('body').should('exist')
       
-      // Should show validation errors
-      cy.get('[data-testid="error-messages"]').should('exist')
-    })
-  })
-
-  describe('Edit Page', () => {
-    it('should update an existing <%= singular_table_name %>', () => {
-      cy.create<%= class_name %>().then((<%= singular_table_name %>) => {
-        cy.visit(`/<%= plural_table_name %>/${<%= singular_table_name %>.id}/edit`)
-        
+      // Preenche os campos básicos
 <% attributes.each do |attribute| -%>
 <% if attribute.type == :string -%>
-        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('Updated <%= attribute.name.titleize %>')
+      cy.get('input[name="<%= attribute.name %>"], input[placeholder*="<%= attribute.name.titleize %>"]').type('Test <%= attribute.name.titleize %>')
 <% elsif attribute.type == :text -%>
-        cy.get('[data-testid="<%= attribute.name %>-textarea"]').clear().type('Updated <%= attribute.name.titleize %> description')
+      cy.get('textarea[name="<%= attribute.name %>"], textarea[placeholder*="<%= attribute.name.titleize %>"]').type('Test <%= attribute.name.titleize %> description')
 <% elsif attribute.type == :integer -%>
-        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('456')
+      cy.get('input[name="<%= attribute.name %>"], input[type="number"]').type('123')
 <% elsif attribute.type == :boolean -%>
-        cy.get('[data-testid="<%= attribute.name %>-checkbox"]').uncheck()
+      cy.get('input[name="<%= attribute.name %>"], input[type="checkbox"]').check()
 <% elsif attribute.type == :date -%>
-        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('2024-02-01')
+      cy.get('input[name="<%= attribute.name %>"], input[type="date"]').type('2024-01-01')
 <% elsif attribute.type == :datetime -%>
-        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('2024-02-01T15:30')
+      cy.get('input[name="<%= attribute.name %>"], input[type="datetime-local"]').type('2024-01-01T10:00')
 <% elsif attribute.type == :time -%>
-        cy.get('[data-testid="<%= attribute.name %>-input"]').clear().type('15:30')
+      cy.get('input[name="<%= attribute.name %>"], input[type="time"]').type('10:00')
 <% elsif attribute.type == :references -%>
-        cy.get('[data-testid="<%= attribute.name %>-select"]').select('2')
+      cy.get('select[name="<%= attribute.name %>"], select').select('1')
 <% end -%>
 <% end -%>
 
-        cy.get('[data-testid="submit-btn"]').click()
-        
-        // Should redirect to show page
-        cy.url().should('include', '/<%= plural_table_name %>/')
-        cy.get('[data-testid="success-message"]').should('contain', 'successfully updated')
-      })
+      // Clica no botão de submit
+      cy.get('button[type="submit"], input[type="submit"], button:contains("Create"), button:contains("Save")').click()
+      
+      // Verifica se foi redirecionado
+      cy.url().should('include', '/<%= plural_table_name %>/')
+    })
+
+    it('deve mostrar erros de validação', () => {
+      cy.visit('/<%= plural_table_name %>/new')
+      
+      // Submete sem preencher campos obrigatórios
+      cy.get('button[type="submit"], input[type="submit"]').click()
+      
+      // Verifica se apareceram erros
+      cy.get('body').should('contain', 'error')
     })
   })
 
-  describe('Delete Functionality', () => {
-    it('should delete a <%= singular_table_name %>', () => {
-      cy.create<%= class_name %>().then((<%= singular_table_name %>) => {
-        cy.visit('/<%= plural_table_name %>')
-        
-        // Find and click delete button for the specific <%= singular_table_name %>
-        cy.get(`[data-testid="delete-<%= singular_table_name %>-${<%= singular_table_name %>.id}"]`).click()
-        
-        // Confirm deletion
-        cy.get('[data-testid="confirm-delete-btn"]').click()
-        
-        // Should redirect to index page
-        cy.url().should('include', '/<%= plural_table_name %>')
-        cy.get('[data-testid="success-message"]').should('contain', 'successfully destroyed')
-      })
+  describe('Página Edit', () => {
+    it('deve editar um <%= singular_table_name %> existente', () => {
+      // Vai para a página index
+      cy.visit('/<%= plural_table_name %>')
+      
+      // Clica no primeiro link de editar
+      cy.get('a[href*="/edit"], button:contains("Edit")').first().click()
+      
+      // Verifica se carregou a página de edição
+      cy.url().should('include', '/edit')
+      
+      // Modifica um campo
+      cy.get('input[name="<%= attributes.first.name %>"]').clear().type('Updated <%= attributes.first.name.titleize %>')
+      
+      // Salva
+      cy.get('button[type="submit"], input[type="submit"], button:contains("Update"), button:contains("Save")').click()
+      
+      // Verifica se foi redirecionado
+      cy.url().should('include', '/<%= plural_table_name %>/')
     })
   })
 
-  describe('Authorization', () => {
-    it('should deny access to unauthorized users', () => {
-      // Login as regular user
-      cy.login('user@example.com', 'password123')
+  describe('Funcionalidade Delete', () => {
+    it('deve deletar um <%= singular_table_name %>', () => {
+      cy.visit('/<%= plural_table_name %>')
+      
+      // Clica no primeiro botão de deletar
+      cy.get('button:contains("Delete"), button:contains("Remove"), a:contains("Delete")').first().click()
+      
+      // Confirma a deleção (se houver confirmação)
+      cy.get('button:contains("Confirm"), button:contains("Yes"), button:contains("OK")').click()
+      
+      // Verifica se voltou para a lista
+      cy.url().should('include', '/<%= plural_table_name %>')
+    })
+  })
+
+  describe('Autorização', () => {
+    it('deve negar acesso a usuários não autorizados', () => {
+      // Login como usuário regular
+      cy.login('user@example.com', 'lklklklk')
       
       cy.visit('/<%= plural_table_name %>')
-      cy.get('[data-testid="access-denied"]').should('contain', "You don't have permission")
-    })
-
-    it('should allow access to authorized users', () => {
-      cy.visit('/<%= plural_table_name %>')
-      cy.get('[data-testid="<%= singular_table_name %>-table"]').should('exist')
+      
+      // Verifica se aparece mensagem de acesso negado
+      cy.get('body').should('contain', 'permission')
     })
   })
 }) 

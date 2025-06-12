@@ -3,8 +3,8 @@ FactoryBot.define do
     name { Faker::Name.name }
     email { Faker::Internet.unique.email }
     phone { "+#{Faker::Number.number(digits: 12)}" }
-    password { "password123" }
-    password_confirmation { "password123" }
+    password { "lklklklk" }
+    password_confirmation { "lklklklk" }
     confirmed_at { Time.current }
 
     trait :unconfirmed do
@@ -25,7 +25,7 @@ FactoryBot.define do
     end
 
     trait :with_mismatched_password do
-      password { "password123" }
+      password { "lklklklk" }
       password_confirmation { "different123" }
     end
   end

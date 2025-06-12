@@ -1,0 +1,67 @@
+// Comandos customizados para <%= class_name %>
+
+// Comando para criar um <%= singular_table_name %> via API
+Cypress.Commands.add('create<%= class_name %>', (attributes = {}) => {
+  const defaultAttributes = {
+<% attributes.each do |attribute| -%>
+<% if attribute.type == :string -%>
+    <%= attribute.name %>: 'Test <%= attribute.name.titleize %>',
+<% elsif attribute.type == :text -%>
+    <%= attribute.name %>: 'Test <%= attribute.name.titleize %> description',
+<% elsif attribute.type == :integer -%>
+    <%= attribute.name %>: 123,
+<% elsif attribute.type == :boolean -%>
+    <%= attribute.name %>: true,
+<% elsif attribute.type == :date -%>
+    <%= attribute.name %>: '2024-01-01',
+<% elsif attribute.type == :datetime -%>
+    <%= attribute.name %>: '2024-01-01T10:00:00Z',
+<% elsif attribute.type == :time -%>
+    <%= attribute.name %>: '10:00:00',
+<% elsif attribute.type == :references -%>
+    <%= attribute.name %>_id: 1,
+<% end -%>
+<% end -%>
+  }
+  
+  return cy.request({
+    method: 'POST',
+    url: '/api/<%= plural_table_name %>',
+    body: { ...defaultAttributes, ...attributes },
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  }).then((response) => {
+    return response.body
+  })
+})
+
+// Comando para preencher formulário de <%= singular_table_name %>
+Cypress.Commands.add('fill<%= class_name %>Form', (fields) => {
+  Object.entries(fields).forEach(([field, value]) => {
+    if (field === '<%= attributes.select { |a| a.type == :boolean }.first&.name %>') {
+      if (value) {
+        cy.get(`input[name="${field}"], input[type="checkbox"]`).check()
+      } else {
+        cy.get(`input[name="${field}"], input[type="checkbox"]`).uncheck()
+      }
+    } else if (field === '<%= attributes.select { |a| a.type == :text }.first&.name %>') {
+      cy.get(`textarea[name="${field}"], textarea`).clear().type(value)
+    } else if (field.include?('_id')) {
+      cy.get(`select[name="${field}"], select`).select(value)
+    } else {
+      cy.get(`input[name="${field}"], input`).clear().type(value)
+    }
+  })
+})
+
+// Comando para verificar dados de <%= singular_table_name %>
+Cypress.Commands.add('verify<%= class_name %>Data', (expectedData) => {
+  Object.entries(expectedData).forEach(([field, value]) => {
+    if (field === '<%= attributes.select { |a| a.type == :boolean }.first&.name %>') {
+      cy.get('body').should('contain', value ? 'Active' : 'Inactive')
+    } else {
+      cy.get('body').should('contain', value)
+    }
+  })
+}) 
