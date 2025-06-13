@@ -107,8 +107,12 @@ describe('<%= class_name.pluralize %>', () => {
       // Verifica se carregou a página de edição
       cy.url().should('include', '/edit')
       
-      // Modifica um campo
-      cy.get('input[name="<%= attributes.first.name %>"]').clear().type('Updated <%= attributes.first.name.titleize %>')
+      // Modifica um campo (usando o primeiro atributo string disponível ou um campo genérico)
+<% if attributes.any? { |attr| attr.type == :string } -%>
+      cy.get('input[name="<%= attributes.find { |attr| attr.type == :string }.name %>"]').clear().type('Updated <%= attributes.find { |attr| attr.type == :string }.name.titleize %>')
+<% else -%>
+      cy.get('input[type="text"]').first().clear().type('Updated Value')
+<% end -%>
       
       // Salva
       cy.get('button[type="submit"], input[type="submit"], button:contains("Update"), button:contains("Save")').click()

@@ -1,8 +1,12 @@
 Rails.application.routes.draw do
+    end
   # Routes only for authenticated users
   authenticated :user do
     resources :users, path: "admin/users"
-  end
+    end
+
+  # API routes
+  # API routes will be added here when using --api flag
 
   # Public routes
   resources :pages
@@ -25,7 +29,6 @@ Rails.application.routes.draw do
     get "/forgot_password", to: "auth#forgot_password"
     get "/reset_password", to: "auth#reset_password"
     get "/resend_confirmation", to: "auth#resend_confirmation"
-  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   get "up" => "rails/health#show", as: :rails_health_check

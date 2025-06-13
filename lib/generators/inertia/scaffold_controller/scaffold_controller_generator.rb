@@ -17,63 +17,77 @@ module Inertia
 
       class_option :helper, type: :boolean
       class_option :orm, banner: "NAME", type: :string, required: true,
-                         desc: "ORM to generate the controller for"
+                        desc: "ORM to generate the controller for"
 
       class_option :skip_routes, type: :boolean, desc: "Don't add routes to config/routes.rb."
 
       class_option :cypress, type: :boolean, default: true,
-                         desc: "Generate Cypress tests"
+                        desc: "Generate Cypress tests"
+
+      class_option :api, type: :boolean, default: false,
+                        desc: "Generate API controller and tests"
 
       argument :attributes, type: :array, default: [], banner: "field:type field:type"
 
-      def create_controller_files
+      def create_all_files
+        # Criar controller principal
         template "controller.rb",
-                 File.join("app/controllers", controller_class_path, "#{controller_file_name}_controller.rb")
-      end
+                  File.join("app/controllers", controller_class_path, "#{controller_file_name}_controller.rb")
 
-      def create_policy_files
+        # Criar controller de API se a flag estiver presente
+        template "api_controller.rb.tt",
+                  File.join("app/controllers/api", "#{controller_file_name}_controller.rb")
+
+        # Criar policy
         template "policy.rb",
-                 File.join("app/policies", "#{file_name}_policy.rb")
-      end
+                  File.join("app/policies", "#{file_name}_policy.rb")
 
-      def create_policy_tests
+        # Criar testes de policy
         template "../../../templates/rspec/policy/policy_spec.rb",
-                 File.join("spec/policies", "#{file_name}_policy_spec.rb")
-      end
+                  File.join("spec/policies", "#{file_name}_policy_spec.rb")
 
-      def create_model_tests
+        # Criar testes de modelo
         template "../../../templates/rspec/model/model_spec.rb.tt",
-                 File.join("spec/models", "#{file_name}_spec.rb")
-      end
+                  File.join("spec/models", "#{file_name}_spec.rb")
 
-      def create_factory_tests
+        # Criar factory
         template "../../../templates/rspec/factory/factory.rb.tt",
-                 File.join("spec/factories", "#{plural_file_name}.rb")
-      end
+                  File.join("spec/factories", "#{plural_file_name}.rb")
 
-      def create_request_tests
+        # Criar testes de request
         template "../../../templates/rspec/request/request_spec.rb.tt",
-                 File.join("spec/requests", "#{plural_file_name}_spec.rb")
-      end
+                  File.join("spec/requests", "#{plural_file_name}_spec.rb")
 
-      def create_controller_tests
+        # Criar testes de API se a flag estiver presente
+        template "api_spec.rb.tt",
+                  File.join("spec/requests/api", "#{plural_file_name}_spec.rb")
+
+        # Criar testes de controller
         template "../../../templates/rspec/scaffold/controller_spec.rb.tt",
-                 File.join("spec/controllers", "#{controller_file_name}_controller_spec.rb")
+                  File.join("spec/controllers", "#{controller_file_name}_controller_spec.rb")
+
+        # Criar testes Cypress
+        template "cypress_spec.js.tt",
+                  File.join("cypress/e2e", "#{plural_table_name}.cy.js")
       end
 
-      def create_cypress_tests
-        return unless options[:cypress]
+      def add_routes
+        return if options[:skip_routes]
 
-        template "cypress_spec.js.tt",
-                 File.join("cypress/e2e", "#{plural_table_name}.cy.js")
+        route "  resources :#{plural_table_name}"
+
+        # Adicionar rotas de API se a flag estiver presente
+        route "namespace :api do"
+        route "  resources :#{plural_table_name}"
+        route "end"
+      end
+
+      def add_api_routes
+        # Método vazio - tudo é feito em add_routes
       end
 
       hook_for :inertia_templates, as: :scaffold, required: true,
-                                   default: InertiaRails::Generators::Helper.guess_inertia_template
-
-      hook_for :resource_route, in: :rails, required: true do |route|
-        invoke route unless options.skip_routes?
-      end
+                                  default: InertiaRails::Generators::Helper.guess_inertia_template
 
       hook_for :test_framework, in: :rails, as: :scaffold
 
