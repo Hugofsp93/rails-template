@@ -1,0 +1,317 @@
+{
+  "_type": "export",
+  "__export_format": 4,
+  "__export_date": "2024-06-16T13:34:35.011Z",
+  "__export_source": "insomnia.desktop.app:v2024.2.0",
+  "resources": [
+    {
+      "_id": "wrk_7f46184301eb407da529bcc91b793b6a",
+      "parentId": null,
+      "modified": 1749822475689,
+      "created": 1749822475689,
+      "name": "Rails Template API",
+      "description": "",
+      "scope": "collection"
+    },
+    {
+      "_id": "fld_auth",
+      "parentId": "wrk_7f46184301eb407da529bcc91b793b6a",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "name": "Auth API",
+      "description": "Authentication endpoints",
+      "environment": {},
+      "environmentPropertyOrder": null,
+      "metaSortKey": -1704067200000
+    },
+    {
+      "_id": "req_sign_in",
+      "parentId": "fld_auth",
+      "modified": 1749823107664,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/sign_in",
+      "name": "Sign In",
+      "description": "Authenticate user and get JWT token",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@template.com\",\n  \"password\": \"lklklklk\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_sign_up",
+      "parentId": "fld_auth",
+      "modified": 1750077645754,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/sign_up",
+      "name": "Sign Up",
+      "description": "Register a new user",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"user\": {\n    \"name\": \"Admin\",\n    \"email\": \"admin@template.com\",\n    \"phone\": \"+1234567890\",\n    \"password\": \"lklklklk\",\n    \"password_confirmation\": \"lklklklk\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_get_current_user",
+      "parentId": "fld_auth",
+      "modified": 1750079661023,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/me",
+      "name": "Get Current User",
+      "description": "Get current user info with JWT token",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}",
+          "description": "",
+          "disabled": false
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_sign_out",
+      "parentId": "fld_auth",
+      "modified": 1704067200000,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/sign_out",
+      "name": "Sign Out",
+      "description": "Sign out (client should remove token)",
+      "method": "DELETE",
+      "body": {},
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_forgot_password",
+      "parentId": "fld_auth",
+      "modified": 1750079885247,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/password",
+      "name": "Forgot Password",
+      "description": "Send password reset instructions",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@template.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_reset_password",
+      "parentId": "fld_auth",
+      "modified": 1750080766957,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/password",
+      "name": "Reset Password",
+      "description": "Reset password with token",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"user\": {\n    \"reset_password_token\": \"TOKEN_FROM_EMAIL\",\n    \"email\": \"admin@template.com\",\n    \"password\": \"newpassword123\",\n    \"password_confirmation\": \"newpassword123\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_confirm_email",
+      "parentId": "fld_auth",
+      "modified": 1750080005687,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/confirmation?confirmation_token=TOKEN_FROM_EMAIL",
+      "name": "Confirm Email",
+      "description": "Confirm email with token",
+      "method": "GET",
+      "body": {},
+      "parameters": [],
+      "headers": [],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_resend_confirmation",
+      "parentId": "fld_auth",
+      "modified": 1750077662412,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/confirmation",
+      "name": "Resend Confirmation",
+      "description": "Resend confirmation instructions",
+      "method": "POST",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"email\": \"admin@template.com\"\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "req_update_profile",
+      "parentId": "fld_auth",
+      "modified": 1750079723342,
+      "created": 1704067200000,
+      "url": "{{ _.base_url }}/api/v1/auth/update",
+      "name": "Update Profile",
+      "description": "Update user profile",
+      "method": "PUT",
+      "body": {
+        "mimeType": "application/json",
+        "text": "{\n  \"user\": {\n    \"name\": \"Updated Name\",\n    \"email\": \"admin@template.com\",\n    \"phone\": \"+1234567890\"\n  }\n}"
+      },
+      "parameters": [],
+      "headers": [
+        {
+          "name": "Content-Type",
+          "value": "application/json"
+        },
+        {
+          "name": "Authorization",
+          "value": "Bearer {{ _.token }}"
+        }
+      ],
+      "authentication": {},
+      "metaSortKey": -1704067200000,
+      "isPrivate": false,
+      "settingStoreCookies": true,
+      "settingSendCookies": true,
+      "settingDisableRenderRequestBody": false,
+      "settingEncodeUrl": true,
+      "settingRebuildPath": true,
+      "settingFollowRedirects": "global",
+      "_type": "request"
+    },
+    {
+      "_id": "env_base",
+      "parentId": "wrk_7f46184301eb407da529bcc91b793b6a",
+      "modified": 1750079655391,
+      "created": 1704067200000,
+      "name": "Base Environment",
+      "data": {
+        "base_url": "http://localhost:3000",
+        "token": ""
+      },
+      "dataPropertyOrder": {
+        "&": ["base_url", "token"]
+      },
+      "color": null,
+      "isPrivate": false,
+      "metaSortKey": 1704067200000,
+      "_type": "environment"
+    }
+  ]
+} 

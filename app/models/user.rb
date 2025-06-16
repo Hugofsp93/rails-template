@@ -8,8 +8,6 @@ class User < ApplicationRecord
 
   attr_accessor :admin_creation
 
-  has_many :nades, dependent: :destroy
-
   validates :email, presence: true, uniqueness: true, format: { with: URI::MailTo::EMAIL_REGEXP }
   validates :phone, presence: true, uniqueness: true, format: {
     with: /\A\+?[1-9]\d{1,14}\z/,
@@ -76,6 +74,7 @@ class User < ApplicationRecord
   private
 
   def should_validate_phone?
+    # Validate phone for admin creation or when updating existing user
     admin_creation || persisted?
   end
 
@@ -84,6 +83,7 @@ class User < ApplicationRecord
     return if roles.any?
 
     # Assign operator role by default for new registrations
+    # Skip if admin_creation is true (admin is creating user with specific role)
     add_role(:operator) unless admin_creation
   end
 end

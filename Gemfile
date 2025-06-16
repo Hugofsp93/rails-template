@@ -91,3 +91,6 @@ gem "ransack"
 # Authorization
 gem "pundit"
 gem "rolify"
+
+# JWT for API authentication
+gem "jwt"

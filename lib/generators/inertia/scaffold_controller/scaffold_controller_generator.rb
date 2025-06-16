@@ -24,8 +24,9 @@ module Inertia
       class_option :cypress, type: :boolean, default: true,
                         desc: "Generate Cypress tests"
 
-      class_option :api, type: :boolean, default: false,
-                        desc: "Generate API controller and tests"
+      # TODO: suspended - Generate API controller and tests
+      # class_option :api, type: :boolean, default: false,
+      #                   desc: "Generate API controller and tests"
 
       argument :attributes, type: :array, default: [], banner: "field:type field:type"
 
@@ -34,9 +35,9 @@ module Inertia
         template "controller.rb",
                   File.join("app/controllers", controller_class_path, "#{controller_file_name}_controller.rb")
 
-        # Criar controller de API se a flag estiver presente
-        template "api_controller.rb.tt",
-                  File.join("app/controllers/api", "#{controller_file_name}_controller.rb")
+        # TODO: suspended - Criar controller de API se a flag estiver presente
+        # template "api_controller.rb.tt",
+        #           File.join("app/controllers/api", "#{controller_file_name}_controller.rb")
 
         # Criar policy
         template "policy.rb",
@@ -58,9 +59,9 @@ module Inertia
         template "../../../templates/rspec/request/request_spec.rb.tt",
                   File.join("spec/requests", "#{plural_file_name}_spec.rb")
 
-        # Criar testes de API se a flag estiver presente
-        template "api_spec.rb.tt",
-                  File.join("spec/requests/api", "#{plural_file_name}_spec.rb")
+        # TODO: suspended - Criar testes de API se a flag estiver presente
+        # template "api_spec.rb.tt",
+        #           File.join("spec/requests/api", "#{plural_file_name}_spec.rb")
 
         # Criar testes de controller
         template "../../../templates/rspec/scaffold/controller_spec.rb.tt",
@@ -76,15 +77,16 @@ module Inertia
 
         route "  resources :#{plural_table_name}"
 
-        # Adicionar rotas de API se a flag estiver presente
-        route "namespace :api do"
-        route "  resources :#{plural_table_name}"
-        route "end"
+        # TODO: suspended - Adicionar rotas de API se a flag estiver presente
+        # route "namespace :api do"
+        # route "  resources :#{plural_table_name}"
+        # route "end"
       end
 
-      def add_api_routes
-        # Método vazio - tudo é feito em add_routes
-      end
+      # TODO: suspended - Adicionar rotas de API se a flag estiver presente
+      # def add_api_routes
+      #   # Método vazio - tudo é feito em add_routes
+      # end
 
       hook_for :inertia_templates, as: :scaffold, required: true,
                                   default: InertiaRails::Generators::Helper.guess_inertia_template

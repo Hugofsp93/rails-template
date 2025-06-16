@@ -1,12 +1,35 @@
 Rails.application.routes.draw do
-    end
   # Routes only for authenticated users
   authenticated :user do
     resources :users, path: "admin/users"
-    end
+  end
 
   # API routes
-  # API routes will be added here when using --api flag
+  namespace :api do
+    namespace :v1 do
+      # Authentication routes
+      namespace :auth do
+        post "sign_up", to: "registrations#create"
+        post "sign_in", to: "sessions#create"
+        delete "sign_out", to: "sessions#destroy"
+        get "me", to: "sessions#me"
+
+        # Password routes
+        post "password", to: "passwords#create"
+        put "password", to: "passwords#update"
+
+        # Confirmation routes
+        get "confirmation", to: "confirmations#show"
+        post "confirmation", to: "confirmations#create"
+
+        # Profile routes
+        put "update", to: "registrations#update"
+      end
+
+      # TODO: suspended - Resource routes (will be added by scaffold generator)
+      # resources :users
+    end
+  end
 
   # Public routes
   resources :pages
@@ -29,6 +52,7 @@ Rails.application.routes.draw do
     get "/forgot_password", to: "auth#forgot_password"
     get "/reset_password", to: "auth#reset_password"
     get "/resend_confirmation", to: "auth#resend_confirmation"
+  end
 
   # Define your application routes per the DSL in https://guides.rubyonrails.org/routing.html
   get "up" => "rails/health#show", as: :rails_health_check
