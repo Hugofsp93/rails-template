@@ -17,6 +17,7 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, on: :create
   validates :password_confirmation, presence: true, on: :create
   validate :password_required?, on: :update
+  validate :require_confirmation, on: :create, unless: :admin_creation
 
   # Callback to assign default role after creation
   after_create :assign_default_role
@@ -76,6 +77,12 @@ class User < ApplicationRecord
   def should_validate_phone?
     # Validate phone for admin creation or when updating existing user
     admin_creation || persisted?
+  end
+
+  def require_confirmation
+    if confirmed_at.nil?
+      errors.add(:base, "Email confirmation is required")
+    end
   end
 
   def assign_default_role

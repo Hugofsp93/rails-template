@@ -6,6 +6,7 @@ FactoryBot.define do
     password { "lklklklk" }
     password_confirmation { "lklklklk" }
     confirmed_at { Time.current }
+    terms { true }
 
     trait :unconfirmed do
       confirmed_at { nil }
@@ -27,6 +28,44 @@ FactoryBot.define do
     trait :with_mismatched_password do
       password { "lklklklk" }
       password_confirmation { "different123" }
+    end
+
+    trait :with_invalid_attributes do
+      name { nil }
+      email { "invalid-email" }
+      phone { "invalid-phone" }
+      password { nil }
+      password_confirmation { nil }
+    end
+
+    trait :super_admin do
+      before(:create) do |user|
+        user.add_role(:super_admin)
+      end
+    end
+
+    trait :admin do
+      before(:create) do |user|
+        user.add_role(:admin)
+      end
+    end
+
+    trait :operator do
+      before(:create) do |user|
+        user.add_role(:operator)
+      end
+    end
+
+    trait :admin_creation do
+      admin_creation { true }
+    end
+
+    trait :without_phone do
+      phone { nil }
+    end
+
+    trait :without_password_confirmation do
+      password_confirmation { nil }
     end
   end
 end
