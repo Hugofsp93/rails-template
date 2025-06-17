@@ -4,10 +4,13 @@ class Api::V1::Auth::RegistrationsController < Api::BaseController
   # POST /api/v1/auth/sign_up
   def create
     user = User.new(user_params)
-    # Don't set admin_creation = true for API registrations
-    # This allows the assign_default_role callback to run
+    user.admin_creation = true # Allow API registrations without confirmation requirement
 
     if user.save
+      # Reset admin_creation and assign default role after save
+      user.admin_creation = false
+      user.add_role(:operator) if user.roles.empty?
+
       # Don't sign in automatically for API
       render_success({
         user: serialize_user(user)

@@ -10,9 +10,9 @@ class Api::V1::Auth::ConfirmationsController < Api::BaseController
         user: serialize_user(user)
       }, "Your email address has been successfully confirmed")
     else
-      if user.confirmed?
+      if user.persisted? && user.confirmed?
         render_error("Email was already confirmed, please try signing in", :unprocessable_entity)
-      elsif !user.confirmation_period_valid?
+      elsif user.persisted? && !user.confirmation_period_valid?
         render_error("Confirmation token has expired. Please request a new one", :unprocessable_entity)
       else
         render_error("Invalid confirmation token", :unprocessable_entity)

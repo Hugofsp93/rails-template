@@ -86,6 +86,13 @@ RSpec.configure do |config|
       example.run
     end
   end
+
+  # Disable confirmation email sending for all tests
+  config.before(:each) do
+    # Allow send_confirmation_instructions to run but prevent actual email sending
+    allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_return(true)
+    allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_later).and_return(true)
+  end
 end
 
 # Shoulda Matchers configuration
