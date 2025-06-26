@@ -2,6 +2,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
   respond_to :html, :json
 
   before_action :configure_sign_up_params, only: [ :create ]
+  before_action :configure_account_update_params, only: [ :update ]
 
   def create
     super do |user|
@@ -30,7 +31,16 @@ class Users::RegistrationsController < Devise::RegistrationsController
         redirect_to edit_user_url(@user), inertia: { errors: @user.errors }
       end
     else
-      super
+      # Custom update logic that doesn't require current_password for basic fields
+      if resource.update_without_password(account_update_params)
+        bypass_sign_in(resource)
+        set_flash_message!(:notice, :updated)
+        redirect_to after_update_path_for(resource)
+      else
+        clean_up_passwords resource
+        set_minimum_password_length
+        render :edit, status: :unprocessable_entity
+      end
     end
   end
 
@@ -38,6 +48,14 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def configure_sign_up_params
     devise_parameter_sanitizer.permit(:sign_up, keys: [ :name, :terms ])
+  end
+
+  def configure_account_update_params
+    devise_parameter_sanitizer.permit(:account_update, keys: [ :name, :email, :phone ])
+  end
+
+  def after_update_path_for(resource)
+    user_path(resource)
   end
 
   def user_params

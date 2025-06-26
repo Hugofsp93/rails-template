@@ -1,6 +1,14 @@
 class Users::ConfirmationsController < Devise::ConfirmationsController
   respond_to :html, :json
 
+  def new
+    if user_signed_in?
+      redirect_to user_path(current_user)
+    else
+      redirect_to "/resend_confirmation"
+    end
+  end
+
   def show
     self.resource = resource_class.confirm_by_token(params[:confirmation_token])
 
@@ -8,9 +16,9 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
       set_flash_message!(:success, :confirmed)
       redirect_to "/sign_in"
     else
-      if resource.confirmed?
+      if resource.persisted? && resource.confirmed?
         set_flash_message!(:error, :already_confirmed)
-      elsif !resource.confirmation_period_valid?
+      elsif resource.persisted? && !resource.confirmation_period_valid?
         set_flash_message!(:error, :expired)
       else
         set_flash_message!(:error, :invalid)
@@ -26,7 +34,7 @@ class Users::ConfirmationsController < Devise::ConfirmationsController
       redirect_to "/resend_confirmation"
     elsif user.confirmed?
       flash[:error] = "User already confirmed"
-      redirect_to "/resend_confirmation"
+      user_signed_in? ? redirect_to("admin/users/#{user.id}") : redirect_to("/sign_in")
     else
       flash[:success] = "Confirmation instructions sent"
       user.send_confirmation_instructions

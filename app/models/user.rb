@@ -17,9 +17,23 @@ class User < ApplicationRecord
   validates :password, presence: true, length: { minimum: 6 }, on: :create
   validates :password_confirmation, presence: true, on: :create
   validate :password_required?, on: :update
+  validate :must_be_confirmed, on: :update
 
   # Callback to assign default role after creation
   after_create :assign_default_role
+
+  # Fix for Devise/Rolify compatibility
+  def self.serialize_from_session(key, salt = nil)
+    if salt.nil?
+      # Handle single argument call (legacy Devise behavior)
+      record = to_adapter.get(key)
+      record
+    else
+      # Handle two argument call (current Devise behavior)
+      record = to_adapter.get(key)
+      record if record && record.authenticatable_salt == salt
+    end
+  end
 
   # Role helper methods
   def super_admin?
@@ -76,6 +90,20 @@ class User < ApplicationRecord
   def should_validate_phone?
     # Validate phone for admin creation or when updating existing user
     admin_creation || persisted?
+  end
+
+  def must_be_confirmed
+    # Only validate confirmation for updates, not for new records
+    return unless persisted?
+
+    # Skip validation if this is an admin creation or if the user is being confirmed
+    # Also skip if we're updating confirmation-related fields
+    return if admin_creation || confirmed_at_changed? || 
+              confirmation_token_changed? || confirmation_sent_at_changed?
+
+    unless confirmed_at.present?
+      errors.add(:base, "User must be confirmed")
+    end
   end
 
   def assign_default_role

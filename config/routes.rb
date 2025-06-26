@@ -38,6 +38,10 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   root "pages#home"
 
+  # Redirect Devise routes to custom Inertia routes
+  get "/users/sign_in", to: redirect("/sign_in")
+  get "/users/sign_up", to: redirect("/sign_up")
+
   # Authentication routes
   devise_for :users, controllers: {
     passwords: "users/passwords",

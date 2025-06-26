@@ -24,6 +24,9 @@ module RailsTemplate
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
 
+    # Add rack-attack middleware for rate limiting
+    config.middleware.use Rack::Attack
+
     # Set RSpec as the default test framework
     config.generators do |g|
       g.test_framework :rspec,

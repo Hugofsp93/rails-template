@@ -139,9 +139,16 @@ RSpec.describe User, type: :model do
       expect(user).to be_valid
     end
 
-    it "is invalid when unconfirmed" do
+    it "is valid when unconfirmed during creation" do
       user = build(:user, :unconfirmed)
+      expect(user).to be_valid
+    end
+
+    it "is invalid when unconfirmed during update" do
+      user = create(:user, :unconfirmed)
+      user.name = "New Name"
       expect(user).not_to be_valid
+      expect(user.errors[:base]).to include("User must be confirmed")
     end
   end
 

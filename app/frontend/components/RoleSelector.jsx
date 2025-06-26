@@ -10,7 +10,7 @@ export default function RoleSelector({ value, onChange, availableRoles, disabled
   ]
 
   const filteredOptions = roleOptions.filter((option) =>
-    availableRoles.includes(option.value) && canAssignRole(option.value)
+    availableRoles.includes(option.value) // && canAssignRole(option.value)
   )
 
   return (

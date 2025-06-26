@@ -10,7 +10,7 @@ export default function RoleBadge({ role, className = '' }) {
       case 'admin':
         return {
           label: 'Admin',
-          bgColor: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300',
+          bgColor: 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-600',
           borderColor: 'border-blue-200 dark:border-blue-700'
         }
       case 'operator':

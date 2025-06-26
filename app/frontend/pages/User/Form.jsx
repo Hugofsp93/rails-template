@@ -11,7 +11,7 @@ import { required, minLength } from '../../utils/validationRules'
 import { email, password, phone } from '../../utils/userValidationRules'
 import { every } from 'lodash'
 
-export default function Form({ errors, data, processing, handleChange, handleSubmit, isEditingPassword, setIsEditingPassword, isEdit, availableRoles }) {
+export default function Form({ errors, data, processing, handleChange, handleSubmit, isEditingPassword, setIsEditingPassword, isEdit, availableRoles, currentUser }) {
   const { toast } = useToast()
   const { canAssignRole } = useAuthorization()
 
@@ -162,7 +162,7 @@ export default function Form({ errors, data, processing, handleChange, handleSub
           </div>
           
           {/* Role selector - only show for admin creation or if user can assign roles */}
-          {(!isEdit || (isEdit && availableRoles?.length > 0)) && (
+          {(data.user.role !== "super_admin" && (!isEdit || (isEdit && availableRoles?.length > 0 && data.user.id !== currentUser.id))) && (
             <RoleSelector
               value={data.user.role}
               onChange={(value) => handleFieldChange('user.role', value)}

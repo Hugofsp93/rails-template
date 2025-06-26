@@ -67,5 +67,10 @@ FactoryBot.define do
     trait :without_password_confirmation do
       password_confirmation { nil }
     end
+
+    # Ensure password is encrypted after creation
+    after(:create) do |user|
+      user.reload
+    end
   end
 end

@@ -9,10 +9,10 @@ RSpec.describe UsersController, type: :controller do
     attributes_for(:user, :with_invalid_attributes)
   }
 
-  let(:user) { create(:user) }
+  let(:user) { create(:user, :admin) }
 
   before do
-    sign_in user
+    sign_in user, scope: :user
   end
 
   describe "GET #index" do

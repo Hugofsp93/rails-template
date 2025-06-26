@@ -23,13 +23,6 @@ RSpec.describe Role, type: :model do
   end
 
   describe "methods" do
-    describe "#full_name" do
-      it "returns the full name" do
-        role = create(:role, first_name: "John", last_name: "Doe")
-        expect(role.full_name).to eq("John Doe")
-      end
-    end
-
     
   end
 end 

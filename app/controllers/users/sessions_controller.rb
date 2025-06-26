@@ -3,11 +3,17 @@ class Users::SessionsController < Devise::SessionsController
   skip_before_action :authenticate_user!, only: [ :create ]
 
   def create
-    user = User.find_by(email: params[:user][:email])
-    if user && user.valid_password?(params[:user][:password])
+    return redirect_to "/sign_in" unless params[:user] || (params[:email] && params[:password])
+
+    email = params.dig(:user, :email) || params[:email]
+    password = params.dig(:user, :password) || params[:password]
+
+    user = User.find_by(email: email)
+    if user && user.valid_password?(password)
       if user.confirmed?
         set_flash_message!(:success, :signed_in)
-        super
+        sign_in(user)
+        redirect_to after_sign_in_path_for(user)
       else
         set_flash_message!(:error, :unconfirmed)
         redirect_to "/resend_confirmation"
@@ -16,6 +22,10 @@ class Users::SessionsController < Devise::SessionsController
       set_flash_message!(:error, :invalid)
       redirect_to "/sign_in"
     end
+  rescue => e
+    # Catch any validation errors and redirect instead of returning 422
+    set_flash_message!(:error, :invalid)
+    redirect_to "/sign_in"
   end
 
   def destroy
@@ -28,11 +38,7 @@ class Users::SessionsController < Devise::SessionsController
   protected
 
   def after_sign_in_path_for(resource)
-    if resource.operator?
-      user_path(resource) # Redireciona para /admin/users/:id
-    else
-      super # Comportamento padrão do Devise
-    end
+    user_path(resource) # Sempre redireciona para /admin/users/:id
   end
 
   def set_flash_message!(type, kind, options = {})

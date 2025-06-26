@@ -6,10 +6,11 @@ import Form from './Form'
 
 export default function Edit() {
   const { toast } = useToast()
-  const { user, availableRoles } = usePage().props
+  const { user, availableRoles, currentUser } = usePage().props
   const [isEditingPassword, setIsEditingPassword] = useState(false)
   const { data, setData, put, processing, errors } = useForm({
     user: {
+      id: user.id,
       name: user.name,
       email: user.email,
       phone: user.phone || '',
@@ -61,6 +62,7 @@ export default function Edit() {
             setIsEditingPassword={setIsEditingPassword}
             isEdit={true}
             availableRoles={availableRoles}
+            currentUser={currentUser}
           />
         </div>
       </section>

@@ -8,7 +8,7 @@ class UsersController < ApplicationController
 
     # Search functionality
     if params[:search].present?
-      @users = @users.where("name ILIKE ? OR email ILIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
+      @users = @users.where("users.name ILIKE ? OR users.email ILIKE ?", "%#{params[:search]}%", "%#{params[:search]}%")
     end
 
     # Filter by confirmation status
@@ -60,10 +60,15 @@ class UsersController < ApplicationController
   # GET /admin/users/1/edit
   def edit
     authorize @user
-    render inertia: "User/Edit", props: {
-      user: serialize_user(@user),
-      availableRoles: available_roles_for_current_user
-    }
+    if @user.role_name == "super_admin"
+      redirect_to users_url, notice: "You cannot edit a super admin user."
+    else
+      render inertia: "User/Edit", props: {
+        user: serialize_user(@user),
+        availableRoles: available_roles_for_current_user,
+        currentUser: serialize_user(current_user)
+      }
+    end
   end
 
   # POST /admin/users
@@ -87,7 +92,6 @@ class UsersController < ApplicationController
   # PATCH/PUT /admin/users/1
   def update
     authorize @user
-
     # Don't require current password for admin updates
     if current_user.super_admin? || current_user.admin?
       # Remove password fields if they're blank

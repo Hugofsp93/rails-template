@@ -45,7 +45,7 @@ export default function ResendConfirmation() {
     <>
       {toast && <Toast {...toast} />}
       <Head title="Resend Confirmation" />
-      <section className="w-full max-w-lg bg-neutral-50 dark:bg-neutral-950">
+      <section className="w-full max-w-lg bg-utility-50 dark:bg-neutral-900">
         <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto lg:py-0">
           <div className="w-full p-6 bg-neutral-50 rounded-lg shadow dark:border md:mt-0 sm:max-w-md dark:bg-neutral-950 dark:border-neutral-800 sm:p-8">
             <h1 className="mb-1 text-xl font-bold leading-tight tracking-tight text-neutral-900 md:text-2xl dark:text-neutral-50">

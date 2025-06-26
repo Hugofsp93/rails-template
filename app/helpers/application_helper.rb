@@ -3,7 +3,7 @@ module ApplicationHelper
 
   def mailer_domain
     if Rails.env.production?
-      "https://app.hugofsp.com"
+      ENV["MAILER_DOMAIN"]
     else
       "http://localhost:3000"
     end

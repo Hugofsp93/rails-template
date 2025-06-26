@@ -22,7 +22,8 @@ class Api::V1::Auth::ConfirmationsController < Api::BaseController
 
   # POST /api/v1/auth/confirmation
   def create
-    user = User.find_by(email: params[:email])
+    email = params[:email] || params.dig(:user, :email)
+    user = User.find_by(email: email)
 
     if user.blank?
       render_error("User not found", :not_found)

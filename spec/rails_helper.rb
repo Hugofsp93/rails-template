@@ -75,6 +75,12 @@ RSpec.configure do |config|
   # Factory Bot configuration
   config.include FactoryBot::Syntax::Methods
 
+  # Devise configuration for request specs
+  config.include Devise::Test::IntegrationHelpers, type: :request
+  
+  # Devise configuration for controller specs
+  config.include Devise::Test::ControllerHelpers, type: :controller
+
   # Database Cleaner configuration
   config.before(:suite) do
     DatabaseCleaner.strategy = :transaction
@@ -89,9 +95,19 @@ RSpec.configure do |config|
 
   # Disable confirmation email sending for all tests
   config.before(:each) do
-    # Allow send_confirmation_instructions to run but prevent actual email sending
-    allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_now).and_return(true)
-    allow_any_instance_of(ActionMailer::MessageDelivery).to receive(:deliver_later).and_return(true)
+    # Clear Rack::Attack cache before each test
+    Rack::Attack.cache.store.clear
+  end
+
+  # Allow email delivery in mailer tests
+  config.before(:each, type: :mailer) do
+    # Don't mock email delivery in mailer tests
+  end
+
+  # Ensure Devise test helpers work correctly
+  config.include Warden::Test::Helpers, type: :request
+  config.after(:each, type: :request) do
+    Warden.test_reset!
   end
 end
 

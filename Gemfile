@@ -46,6 +46,7 @@ group :development, :test do
 
   # Testing framework
   gem "rspec-rails"
+  # gem "rspec-benchmark"
   gem "factory_bot_rails"
   gem "faker"
   gem "shoulda-matchers"
@@ -94,3 +95,6 @@ gem "rolify"
 
 # JWT for API authentication
 gem "jwt"
+
+# Rate limiting
+gem "rack-attack"

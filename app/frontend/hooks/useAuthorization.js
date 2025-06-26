@@ -57,7 +57,7 @@ export const useAuthorization = () => {
 
   const canAssignRole = (roleName) => {
     if (roleName === 'super_admin') return isSuperAdmin()
-    if (roleName === 'admin' || roleName === 'operator') return isSuperAdmin() || isAdmin()
+    if (roleName === 'admin' || roleName === 'operator') return isAdmin() || isSuperAdmin()
     return false
   }
 

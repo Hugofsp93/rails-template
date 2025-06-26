@@ -14,7 +14,17 @@ class Api::BaseController < ApplicationController
 
     begin
       decoded_token = JWT.decode(token, jwt_secret_key, true, { algorithm: "HS256" })
-      user_id = decoded_token[0]["user_id"]
+      payload = decoded_token[0]
+      user_id = payload["user_id"]
+      
+      # Validate required claims - exp is mandatory
+      return render_unauthorized unless user_id && payload["exp"]
+      
+      # Validate iat is not in the future
+      if payload["iat"] && payload["iat"] > Time.current.to_i
+        return render_unauthorized
+      end
+      
       @current_api_user = User.find(user_id)
     rescue JWT::DecodeError, ActiveRecord::RecordNotFound
       render_unauthorized
@@ -29,6 +39,9 @@ class Api::BaseController < ApplicationController
     auth_header = request.headers["Authorization"]
     return nil unless auth_header
 
+    # Must start with "Bearer "
+    return nil unless auth_header.start_with?("Bearer ")
+    
     auth_header.split(" ").last
   end
 
@@ -37,7 +50,7 @@ class Api::BaseController < ApplicationController
   end
 
   def render_unauthorized
-    render json: { error: "Unauthorized" }, status: :unauthorized
+    render json: { error: "Invalid or expired token" }, status: :unauthorized
   end
 
   def render_error(message, status = :unprocessable_entity)

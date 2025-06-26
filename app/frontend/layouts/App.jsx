@@ -43,7 +43,7 @@ export default function App({ children }) {
               </div>
               <ul className="py-2" aria-labelledby="user-menu-button">
                 <li>
-                  <a href="#" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-neutral-50">Dashboard</a>
+                  <a href={`/admin/users/${currentUser.id}/edit`} className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-neutral-50">Edit</a>
                 </li>
                 <li>
                   <a href="#" className="block px-4 py-2 text-sm text-neutral-700 hover:bg-neutral-100 dark:hover:bg-neutral-600 dark:text-neutral-200 dark:hover:text-neutral-50">Settings</a>

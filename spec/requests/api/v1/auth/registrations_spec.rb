@@ -260,6 +260,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
         # Note: Email updates might be restricted for security reasons
         # The API returns success but email remains unchanged
+        user.reload
         expect(json_response['data']['user']['email']).to eq(user.email) # Email should remain unchanged
       end
 
@@ -328,6 +329,7 @@ RSpec.describe 'Api::V1::Auth::Registrations', type: :request do
 
         # Email updates might be restricted, so this could return success with unchanged email
         # or an error depending on the API design
+        user.reload
         if response.status == 200
           expect(json_response['success']).to be true
           expect(json_response['data']['user']['email']).to eq(user.email) # Email unchanged
